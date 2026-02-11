@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Generate PDF{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body { font-family: Arial, sans-serif; padding: 2rem; background: #f5f5f5; }
+        h1 { color: #333; }
+        .form-container { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); max-width: 600px; }
+        .field-url, .field-html { display: none; }
+        .field-url.active, .field-html.active { display: block; }
+        button { margin-top: 1rem; padding: 0.5rem 1.5rem; background: #0056b3; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #004094; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>Generate PDF</h1>
+
+    <div class="form-container">
+        {{ form_start(form, {'action': path('app_generate_pdf'), 'method': 'POST'}) }}
+
+            {{ form_row(form.type) }}
+
+            <div class="field-url active">
+                {{ form_row(form.url) }}
+            </div>
+
+            <div class="field-html">
+                {{ form_row(form.htmlFile) }}
+            </div>
+
+            <button type="submit">Generate PDF</button>
+        {{ form_end(form) }}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const typeSelect = document.querySelector('[name$="[type]"]');
+            const fieldUrl = document.querySelector('.field-url');
+            const fieldHtml = document.querySelector('.field-html');
+
+            function toggle() {
+                if (typeSelect.value === 'html') {
+                    fieldUrl.classList.remove('active');
+                    fieldHtml.classList.add('active');
+                } else {
+                    fieldUrl.classList.add('active');
+                    fieldHtml.classList.remove('active');
+                }
+            }
+
+            typeSelect.addEventListener('change', toggle);
+            toggle();
+        });
+    </script>
+{% endblock %}
