@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}URL to PDF{% endblock %}
+{% block title %}HTML to PDF{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -11,8 +11,7 @@
             margin-bottom: 0.25rem;
             display: block;
         }
-        .form-container input[type="text"],
-        .form-container input[type="url"] {
+        .form-container input[type="file"] {
             width: 100%;
             padding: 0.75rem 1rem;
             border-radius: 0.5rem;
@@ -24,7 +23,7 @@
             margin-bottom: 1rem;
         }
         .form-container input:focus {
-            border-color: #FF701F;
+            border-color: #3B82F6;
         }
     </style>
 {% endblock %}
@@ -32,19 +31,19 @@
 {% block body %}
     <div {{ react_component('PageTransition') }}></div>
 
-    <div class="min-h-screen w-full flex flex-col" style="background: #FF701F;">
+    <div class="min-h-screen w-full flex flex-col" style="background: #3B82F6;">
         <div {{ react_component('Header') }}></div>
         <div {{ react_component('WhiteBar') }}></div>
 
         <div class="flex-1 flex flex-col items-center justify-center px-4">
-            <h1 class="font-thunder text-[60px] md:text-[150px] lg:text-[200px] leading-[1] text-black uppercase mb-8">
-                URL to PDF
+            <h1 class="font-thunder text-[60px] md:text-[150px] lg:text-[200px] leading-[1] text-white uppercase mb-8">
+                HTML to PDF
             </h1>
 
             <div class="form-container w-full max-w-lg bg-black/10 backdrop-blur-sm border border-black/10 rounded-xl p-8">
-                {{ form_start(form, {'action': path('app_generate_pdf'), 'method': 'POST'}) }}
+                {{ form_start(form, {'action': path('app_html_to_pdf'), 'method': 'POST'}) }}
 
-                    {{ form_row(form.url) }}
+                    {{ form_row(form.htmlFile) }}
 
                     <button type="submit" class="w-full py-3 bg-black hover:bg-black/80 text-white font-bold rounded-lg transition-all mt-4 cursor-pointer border-none text-base">
                         Générer le PDF
