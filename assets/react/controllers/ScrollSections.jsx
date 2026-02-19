@@ -58,7 +58,7 @@ const tools = [
         icon: HtmlIcon,
         description: 'Convertir du code HTML en fichier PDF.',
         color: '#3B82F6',
-        link: '/generate-pdf',
+        link: '/html-to-pdf',
     },
     {
         name: 'Merge PDF',
