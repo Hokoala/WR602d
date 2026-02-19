@@ -1,37 +1,76 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Generate PDF{% endblock %}
+{% block title %}Convertisseur PDF{% endblock %}
 
 {% block stylesheets %}
+    {{ parent() }}
     <style>
-        body { font-family: Arial, sans-serif; padding: 2rem; background: #f5f5f5; }
-        h1 { color: #333; }
-        .form-container { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); max-width: 600px; }
         .field-url, .field-html { display: none; }
         .field-url.active, .field-html.active { display: block; }
-        button { margin-top: 1rem; padding: 0.5rem 1.5rem; background: #0056b3; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background: #004094; }
+
+        .form-container label {
+            color: white;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+        .form-container select,
+        .form-container input[type="text"],
+        .form-container input[type="url"],
+        .form-container input[type="file"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.3);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            margin-bottom: 1rem;
+        }
+        .form-container select:focus,
+        .form-container input:focus {
+            border-color: #FF701F;
+        }
     </style>
 {% endblock %}
 
 {% block body %}
-    <h1>Generate PDF</h1>
+    <div {{ react_component('PageTransition') }}></div>
 
-    <div class="form-container">
-        {{ form_start(form, {'action': path('app_generate_pdf'), 'method': 'POST'}) }}
+    <div class="min-h-screen w-full flex flex-col" style="background: #FF701F;">
+        {# Header #}
+        <div {{ react_component('Header') }}></div>
+        <div {{ react_component('WhiteBar') }}></div>
 
-            {{ form_row(form.type) }}
+        {# Contenu #}
+        <div class="flex-1 flex flex-col items-center justify-center px-4">
+            <h1 class="font-thunder text-[60px] md:text-[150px] lg:text-[200px] leading-[1] text-black uppercase mb-8">
+                Convertisseur
+            </h1>
 
-            <div class="field-url active">
-                {{ form_row(form.url) }}
+            <div class="form-container w-full max-w-lg bg-black/10 backdrop-blur-sm border border-black/10 rounded-xl p-8">
+                {{ form_start(form, {'action': path('app_generate_pdf'), 'method': 'POST'}) }}
+
+                    {{ form_row(form.type) }}
+
+                    <div class="field-url active">
+                        {{ form_row(form.url) }}
+                    </div>
+
+                    <div class="field-html">
+                        {{ form_row(form.htmlFile) }}
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-black hover:bg-black/80 text-white font-bold rounded-lg transition-all mt-4 cursor-pointer border-none text-base">
+                        Générer le PDF
+                    </button>
+                {{ form_end(form) }}
             </div>
+        </div>
 
-            <div class="field-html">
-                {{ form_row(form.htmlFile) }}
-            </div>
-
-            <button type="submit">Generate PDF</button>
-        {{ form_end(form) }}
+        {# Footer #}
+        <div {{ react_component('Footer') }}></div>
     </div>
 
     <script>

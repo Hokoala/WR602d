@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block body %}
+    <div {{ react_component('HomePage') }}></div>
+    <div {{ react_component('ScrollSections') }}></div>
+    <div {{ react_component('Footer') }}></div>
+{% endblock %}
