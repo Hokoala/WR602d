@@ -25,6 +25,22 @@
         .form-container input:focus {
             border-color: #3B82F6;
         }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(80px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .anim-title {
+            animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .anim-form {
+            opacity: 0;
+            animation: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+        }
     </style>
 {% endblock %}
 
@@ -36,11 +52,11 @@
         <div {{ react_component('WhiteBar') }}></div>
 
         <div class="flex-1 flex flex-col items-center justify-center px-4">
-            <h1 class="font-thunder text-[60px] md:text-[150px] lg:text-[200px] leading-[1] text-white uppercase mb-8">
+            <h1 class="anim-title font-thunder text-[60px] md:text-[150px] lg:text-[200px] leading-[1] text-white uppercase mb-8">
                 HTML to PDF
             </h1>
 
-            <div class="form-container w-full max-w-lg bg-black/10 backdrop-blur-sm border border-black/10 rounded-xl p-8">
+            <div class="anim-form form-container w-full max-w-lg bg-black/10 backdrop-blur-sm border border-black/10 rounded-xl p-8">
                 {{ form_start(form, {'action': path('app_html_to_pdf'), 'method': 'POST'}) }}
 
                     {{ form_row(form.htmlFile) }}
