@@ -3,7 +3,11 @@
 {% block title %}Home Page{% endblock %}
 
 {% block body %}
-    <div {{ react_component('HomePage') }}></div>
+    <div {{ react_component('HomePage', {
+        'firstname': app.user ? app.user.firstname : null,
+        'lastname': app.user ? app.user.lastname : null,
+        'email': app.user ? app.user.email : null
+    }) }}></div>
     <div {{ react_component('ScrollSections') }}></div>
     <div {{ react_component('Footer') }}></div>
 {% endblock %}

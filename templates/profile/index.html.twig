@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+    <div {{ react_component('Profile', {
+        'firstname': user.firstname,
+        'lastname': user.lastname,
+        'email': user.email,
+        'phone': user.phone,
+        'dob': user.dob ? user.dob|date('d/m/Y') : null,
+        'photo': user.photo,
+        'plan': user.plan ? (user.plan.name ?? 'Standard') : null,
+        'isVerified': user.isVerified
+    }) }}></div>
+{% endblock %}

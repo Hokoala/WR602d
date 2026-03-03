@@ -3,25 +3,125 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
-    <div {{ react_component('PageTransition') }}></div>
-    <h1>Connexion</h1>
+<div style="min-height:100vh; display:flex; flex-direction:row; background:#f9fafb;">
 
-    {% if error %}
-        <p style="color:red;">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
-    {% endif %}
+    {# ── GAUCHE : photo ── #}
+    <div style="width:50%; position:relative; overflow:hidden; flex-shrink:0;
+                background-image: url('/images/bg-auth.jpg');
+                background-size: cover;
+                background-position: center;">
 
-    <form method="post">
-        <div>
-            <label for="username">Email :</label>
-            <input type="email" id="username" name="_username" value="{{ last_username }}" required autofocus>
+        {# Overlay dégradé sombre #}
+        <div style="position:absolute; inset:0;
+                    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.15) 100%);">
         </div>
-        <div>
-            <label for="password">Mot de passe :</label>
-            <input type="password" id="password" name="_password" required>
-        </div>
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-        <button type="submit">Se connecter</button>
-    </form>
 
-    <p><a href="{{ path('app_forgot_password_request') }}">Mot de passe oublié ?</a></p>
+        {# Texte en bas #}
+        <div style="position:absolute; bottom:3rem; left:2.5rem; right:2.5rem; z-index:10;">
+            <h2 class="font-thunder" style="font-size:3.5rem; color:#fff; line-height:1; margin-bottom:0.75rem;">
+                BON RETOUR !
+            </h2>
+            <p style="color:rgba(255,255,255,0.7); font-size:0.875rem; line-height:1.6; max-width:18rem; margin-bottom:2rem;">
+                Accédez à vos outils de conversion PDF et à votre historique de fichiers.
+            </p>
+            <div style="display:flex; align-items:center; gap:2.5rem;">
+                <div>
+                    <p class="font-thunder" style="font-size:2.25rem; color:#FF701F; line-height:1;">500K+</p>
+                    <p style="color:rgba(255,255,255,0.5); font-size:0.7rem; margin-top:0.2rem;">PDF générés</p>
+                </div>
+                <div style="width:1px; height:36px; background:rgba(255,255,255,0.25);"></div>
+                <div>
+                    <p class="font-thunder" style="font-size:2.25rem; color:#FF701F; line-height:1;">10K+</p>
+                    <p style="color:rgba(255,255,255,0.5); font-size:0.7rem; margin-top:0.2rem;">Utilisateurs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ── DROITE : formulaire centré ── #}
+    <div style="width:50%; display:flex; align-items:center; justify-content:center;
+                background:#f9fafb; padding:3rem 1.5rem; flex-shrink:0;">
+
+        <div style="width:100%; max-width:26rem;">
+
+            {# Retour #}
+            <a href="/home" style="display:inline-flex; align-items:center; gap:0.5rem;
+                                   color:#9ca3af; text-decoration:none; font-size:0.875rem;
+                                   margin-bottom:2.5rem; transition:color 0.2s;">
+                <svg xmlns="http://www.w3.org/2000/svg" style="width:1rem;height:1rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                Retour à l'accueil
+            </a>
+
+            {# Titre #}
+            <h1 class="font-thunder" style="font-size:3rem; color:#111827; line-height:1; margin-bottom:0.5rem;">
+                CONNEXION
+            </h1>
+            <p style="color:#9ca3af; font-size:0.875rem; margin-bottom:2rem;">
+                Bon retour ! Connectez-vous à votre compte.
+            </p>
+
+            {# Messages #}
+            {% if error %}
+                <div style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; font-size:0.875rem; border-radius:0.75rem; padding:0.75rem 1rem; margin-bottom:1.5rem;">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            {% for flash_success in app.flashes('success') %}
+                <div style="background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; font-size:0.875rem; border-radius:0.75rem; padding:0.75rem 1rem; margin-bottom:1.5rem;">
+                    {{ flash_success }}
+                </div>
+            {% endfor %}
+
+            {# Formulaire #}
+            <form method="post" style="display:flex; flex-direction:column; gap:1.25rem;">
+
+                <div>
+                    <label style="display:block; font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
+                        Adresse email
+                    </label>
+                    <input type="email" id="username" name="_username" value="{{ last_username }}" required autofocus
+                        placeholder="votre@email.com"
+                        style="width:100%; border:1px solid #e5e7eb; border-radius:0.75rem; padding:0.75rem 1rem;
+                               font-size:0.875rem; color:#1f2937; background:#fff; box-sizing:border-box;
+                               outline:none; transition:border-color 0.2s, box-shadow 0.2s;">
+                </div>
+
+                <div>
+                    <label style="display:block; font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
+                        Mot de passe
+                    </label>
+                    <input type="password" id="password" name="_password" required
+                        placeholder="••••••••"
+                        style="width:100%; border:1px solid #e5e7eb; border-radius:0.75rem; padding:0.75rem 1rem;
+                               font-size:0.875rem; color:#1f2937; background:#fff; box-sizing:border-box;
+                               outline:none; transition:border-color 0.2s, box-shadow 0.2s;">
+                </div>
+
+                <div style="text-align:right;">
+                    <a href="{{ path('app_forgot_password_request') }}" style="font-size:0.75rem; color:#FF701F; text-decoration:none;">
+                        Mot de passe oublié ?
+                    </a>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <button type="submit" class="font-thunder"
+                    style="width:100%; background:#FF701F; color:#fff; font-size:1.375rem;
+                           padding:0.875rem; border-radius:0.75rem; border:none; cursor:pointer;
+                           letter-spacing:0.05em; transition:background 0.2s;">
+                    SE CONNECTER
+                </button>
+            </form>
+
+            <p style="text-align:center; font-size:0.875rem; color:#9ca3af; margin-top:1.5rem;">
+                Pas encore de compte ?
+                <a href="/register" style="color:#FF701F; font-weight:700; text-decoration:none;">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+
+</div>
 {% endblock %}
