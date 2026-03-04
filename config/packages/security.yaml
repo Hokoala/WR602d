@@ -1,4 +1,9 @@
 security:
+    role_hierarchy:
+        ROLE_PREMIUM:     ROLE_USER
+        ROLE_ADMIN:       ROLE_PREMIUM
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
@@ -30,8 +35,18 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        # Pages publiques (login, register, reset-password) → pas de règle restrictive
+
+        # Outils de conversion → authentification obligatoire
+        - { path: ^/generate-pdf, roles: ROLE_USER }
+        - { path: ^/convert,      roles: ROLE_USER }
+        - { path: ^/html-to-pdf,  roles: ROLE_USER }
+
+        # Profil → authentification obligatoire
+        - { path: ^/profile,      roles: ROLE_USER }
+
+        # Admin → rôle admin
+        - { path: ^/admin,        roles: ROLE_ADMIN }
 
 when@test:
     security:
