@@ -237,10 +237,13 @@ export default function ScrollSections() {
                         <div>
                             <h3 className="font-thunder text-[40px] md:text-[50px] text-white uppercase">Free</h3>
                             <p className="font-thunder text-[50px] md:text-[70px] text-white leading-[1] mt-2">0€</p>
-                            <ul className="text-white/80 mt-6 space-y-3 text-sm">
-                                <li>5 conversions / jour</li>
-                                <li>Fichiers jusqu'à 5 Mo</li>
-                                <li>Support communautaire</li>
+                            <ul className="mt-6 space-y-3 text-sm">
+                                {['5 conversions / jour', 'Fichiers jusqu\'à 5 Mo', 'Support communautaire'].map(f => (
+                                    <li key={f} className="flex items-center gap-2 text-white/80">
+                                        <svg xmlns="http://www.w3.org/2000/svg" style={{width:'1rem',height:'1rem',flexShrink:0,color:'rgba(255,255,255,0.5)'}} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                        {f}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                         <a href="/register" className="mt-8 block text-center bg-white/20 hover:bg-white/30 text-white py-3 rounded-lg transition-all">Commencer</a>
@@ -251,11 +254,13 @@ export default function ScrollSections() {
                             <span className="text-[10px] font-mono uppercase tracking-widest bg-[#FF701F] text-white px-3 py-1 rounded-full">Populaire</span>
                             <h3 className="font-thunder text-[40px] md:text-[50px] text-[#FF701F] uppercase mt-4">Basic</h3>
                             <p className="font-thunder text-[50px] md:text-[70px] text-[#FF701F] leading-[1] mt-2">9€<span className="text-[20px] text-black/40">/mois</span></p>
-                            <ul className="text-black/70 mt-6 space-y-3 text-sm">
-                                <li>50 conversions / jour</li>
-                                <li>Fichiers jusqu'à 50 Mo</li>
-                                <li>Support prioritaire</li>
-                                <li>Conversion par lot</li>
+                            <ul className="mt-6 space-y-3 text-sm">
+                                {['50 conversions / jour', 'Fichiers jusqu\'à 50 Mo', 'Support prioritaire', 'Conversion par lot'].map(f => (
+                                    <li key={f} className="flex items-center gap-2 text-black/70">
+                                        <svg xmlns="http://www.w3.org/2000/svg" style={{width:'1rem',height:'1rem',flexShrink:0,color:'#FF701F'}} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                        {f}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                         <a href="/register" className="mt-8 block text-center bg-[#FF701F] hover:bg-[#e5631a] text-white py-3 rounded-lg transition-all font-bold">Choisir Basic</a>
@@ -265,11 +270,13 @@ export default function ScrollSections() {
                         <div>
                             <h3 className="font-thunder text-[40px] md:text-[50px] text-white uppercase">Premium</h3>
                             <p className="font-thunder text-[50px] md:text-[70px] text-white leading-[1] mt-2">29€<span className="text-[20px] text-white/40">/mois</span></p>
-                            <ul className="text-white/80 mt-6 space-y-3 text-sm">
-                                <li>Conversions illimitées</li>
-                                <li>Fichiers jusqu'à 200 Mo</li>
-                                <li>Support dédié 24/7</li>
-                                <li>API access</li>
+                            <ul className="mt-6 space-y-3 text-sm">
+                                {['Conversions illimitées', 'Fichiers jusqu\'à 200 Mo', 'Support dédié 24/7', 'API access'].map(f => (
+                                    <li key={f} className="flex items-center gap-2 text-white/80">
+                                        <svg xmlns="http://www.w3.org/2000/svg" style={{width:'1rem',height:'1rem',flexShrink:0,color:'rgba(255,255,255,0.6)'}} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                        {f}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                         <a href="/register" className="mt-8 block text-center bg-white/20 hover:bg-white/30 text-white py-3 rounded-lg transition-all">Choisir Premium</a>
