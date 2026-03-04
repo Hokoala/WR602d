@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Repository\GenerationRepository;
 use App\Service\YourGotenbergService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,12 +14,17 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ProfileController extends AbstractController
 {
     #[Route('/profile', name: 'app_profile')]
-    public function index(): Response
+    public function index(GenerationRepository $generationRepository): Response
     {
-        $user = $this->getUser();
+        /** @var User $user */
+        $user  = $this->getUser();
+        $limit = $user->getPlan()?->getLimitGeneration();
+        $used  = $generationRepository->countByUser($user);
 
         return $this->render('profile/index.html.twig', [
-            'user' => $user,
+            'user'            => $user,
+            'generationUsed'  => $used,
+            'generationLimit' => $limit,
         ]);
     }
 

@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import Header from './Header';
 import WhiteBar from './WhiteBar';
 import Footer from './Footer';
+import GenerationCounter from './GenerationCounter';
 
 function hexToRgba(hex, alpha) {
     if (!hex || hex.length < 7) return `rgba(255,112,31,${alpha})`;
@@ -127,7 +128,7 @@ function ToolCard({ tool, index }) {
         : card;
 }
 
-export default function ConverterHub({ firstname, lastname, email, toolsData }) {
+export default function ConverterHub({ firstname, lastname, email, toolsData, generationUsed, generationLimit, planName }) {
     const titleRef = useRef(null);
 
     useEffect(() => {
@@ -147,13 +148,16 @@ export default function ConverterHub({ firstname, lastname, email, toolsData }) 
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem 1.5rem' }}>
 
                 {/* Titre */}
-                <div ref={titleRef} style={{ textAlign: 'center', marginBottom: '2.5rem', opacity: 0 }}>
+                <div ref={titleRef} style={{ textAlign: 'center', marginBottom: '2rem', opacity: 0 }}>
                     <h1 style={{ fontFamily: 'Thunder-Extra-Bold, sans-serif', fontSize: 'clamp(40px,20vw,420px)', color: '#fff', lineHeight: 1, margin: '0 0 0.5rem' }}>
                         CONVERTISSEUR
                     </h1>
-                    <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.95rem' }}>
+                    <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
                         Choisissez votre outil de conversion
                     </p>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <GenerationCounter used={generationUsed} limit={generationLimit} planName={planName} />
+                    </div>
                 </div>
 
                 {/* Cards */}
