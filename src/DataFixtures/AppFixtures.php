@@ -67,8 +67,8 @@ class AppFixtures extends Fixture
         $plans = [
             [
                 'name' => 'FREE',
-                'description' => 'Plan gratuit pour découvrir le service. Accès limité aux fonctionnalités de base.',
-                'limitGeneration' => 10,
+                'description' => 'Plan gratuit pour découvrir le service. Accès à tous les outils, limité à 5 générations.',
+                'limitGeneration' => 5,
                 'image' => 'free.png',
                 'role' => 'ROLE_FREE',
                 'price' => '0.00',
@@ -76,7 +76,7 @@ class AppFixtures extends Fixture
                 'specialPriceFrom' => null,
                 'specialPriceTo' => null,
                 'active' => true,
-                'tools' => ['URL to PDF'],
+                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Split PDF', 'Compress PDF'],
             ],
             [
                 'name' => 'BASIC',
@@ -89,7 +89,7 @@ class AppFixtures extends Fixture
                 'specialPriceFrom' => new \DateTime('2024-01-01'),
                 'specialPriceTo' => new \DateTime('2024-12-31'),
                 'active' => true,
-                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF'],
+                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Split PDF', 'Compress PDF'],
             ],
             [
                 'name' => 'PREMIUM',

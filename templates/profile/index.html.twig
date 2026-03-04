@@ -4,13 +4,15 @@
 
 {% block body %}
     <div {{ react_component('Profile', {
-        'firstname': user.firstname,
-        'lastname': user.lastname,
-        'email': user.email,
-        'phone': user.phone,
-        'dob': user.dob ? user.dob|date('d/m/Y') : null,
-        'photo': user.photo,
-        'plan': user.plan ? (user.plan.name ?? 'Standard') : null,
-        'isVerified': user.isVerified
+        'firstname':       user.firstname,
+        'lastname':        user.lastname,
+        'email':           user.email,
+        'phone':           user.phone,
+        'dob':             user.dob ? user.dob|date('d/m/Y') : null,
+        'photo':           user.photo,
+        'plan':            user.plan ? (user.plan.name ?? 'FREE') : null,
+        'isVerified':      user.isVerified,
+        'generationUsed':  generationUsed,
+        'generationLimit': generationLimit
     }) }}></div>
 {% endblock %}

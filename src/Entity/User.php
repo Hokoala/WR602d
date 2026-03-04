@@ -46,7 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Generation>
      */
-    #[ORM\OneToMany(targetEntity: Generation::class, mappedBy: 'user_id')]
+    #[ORM\OneToMany(targetEntity: Generation::class, mappedBy: 'user')]
     private Collection $generations;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -203,7 +203,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->generations->contains($generation)) {
             $this->generations->add($generation);
-            $generation->setUserId($this);
+            $generation->setUser($this);
         }
 
         return $this;
@@ -213,8 +213,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->generations->removeElement($generation)) {
             // set the owning side to null (unless already changed)
-            if ($generation->getUserId() === $this) {
-                $generation->setUserId(null);
+            if ($generation->getUser() === $this) {
+                $generation->setUser(null);
             }
         }
 

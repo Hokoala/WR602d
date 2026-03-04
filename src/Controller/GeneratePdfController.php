@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Generation;
+use App\Entity\User;
+use App\Repository\GenerationRepository;
 use App\Repository\ToolRepository;
 use App\Security\Voter\ToolAccessVoter;
 use App\Service\YourGotenbergService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,13 +24,63 @@ class GeneratePdfController extends AbstractController
     public function __construct(
         private YourGotenbergService $pdfService,
         private ToolRepository $toolRepository,
+        private GenerationRepository $generationRepository,
+        private EntityManagerInterface $em,
     ) {
+    }
+
+    private function hasReachedGenerationLimit(): bool
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $limit = $user->getPlan()?->getLimitGeneration();
+
+        if ($limit === null || $limit === -1) {
+            return false;
+        }
+
+        return $this->generationRepository->countByUser($user) >= $limit;
+    }
+
+    private function denyIfLimitReached(string $route): ?Response
+    {
+        if (!$this->hasReachedGenerationLimit()) {
+            return null;
+        }
+
+        /** @var User $user */
+        $user = $this->getUser();
+        $limit = $user->getPlan()?->getLimitGeneration();
+        $planName = $user->getPlan()?->getName() ?? 'FREE';
+
+        $this->addFlash(
+            'warning',
+            "Vous avez atteint la limite de {$limit} générations de votre plan {$planName}. "
+            . "Passez à un abonnement supérieur pour continuer à générer des PDF."
+        );
+
+        return $this->redirectToRoute($route);
+    }
+
+    private function saveGeneration(string $filename): void
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $generation = new Generation();
+        $generation->setUser($user);
+        $generation->setFile($filename);
+        $generation->setCreateadAt(new \DateTimeImmutable());
+        $this->em->persist($generation);
+        $this->em->flush();
     }
 
     /** Hub :page de sélection des outils */
     #[Route('/generate-pdf', name: 'app_generate_pdf', methods: ['GET'])]
     public function hub(): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
         $allTools = $this->toolRepository->findAll();
         $routeMap = [
             'url to pdf'        => '/convert/url',
@@ -53,8 +107,14 @@ class GeneratePdfController extends AbstractController
             ];
         }
 
+        $limit = $user->getPlan()?->getLimitGeneration();
+        $used  = $this->generationRepository->countByUser($user);
+
         return $this->render('pdf/hub.html.twig', [
-            'toolsData' => $toolsData,
+            'toolsData'       => $toolsData,
+            'generationUsed'  => $used,
+            'generationLimit' => $limit,
+            'planName'        => $user->getPlan()?->getName() ?? 'FREE',
         ]);
     }
 
@@ -74,7 +134,12 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($redirect = $this->denyIfLimitReached('app_convert_url')) {
+                return $redirect;
+            }
+
             $pdfContent = $this->pdfService->generatePdfFromUrl($form->getData()['url']);
+            $this->saveGeneration('generated.pdf');
 
             return new Response($pdfContent, 200, [
                 'Content-Type'        => 'application/pdf',
@@ -109,8 +174,13 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($redirect = $this->denyIfLimitReached('app_html_to_pdf')) {
+                return $redirect;
+            }
+
             $htmlContent = $form->getData()['htmlFile']->getContent();
             $pdfContent  = $this->pdfService->generatePdfFromHtml($htmlContent);
+            $this->saveGeneration('generated.pdf');
 
             return new Response($pdfContent, 200, [
                 'Content-Type'        => 'application/pdf',
@@ -148,10 +218,15 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($redirect = $this->denyIfLimitReached('app_merge_pdf')) {
+                return $redirect;
+            }
+
             $files     = $form->getData()['pdfFiles'];
             $contents  = array_map(fn($f) => $f->getContent(), $files);
             $filenames = array_map(fn($f) => $f->getClientOriginalName(), $files);
             $pdfContent = $this->pdfService->generatePdfFromMerge($contents, $filenames);
+            $this->saveGeneration('merged.pdf');
 
             return new Response($pdfContent, 200, [
                 'Content-Type'        => 'application/pdf',
@@ -186,8 +261,13 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($redirect = $this->denyIfLimitReached('app_markdown_to_pdf')) {
+                return $redirect;
+            }
+
             $mdContent  = $form->getData()['mdFile']->getContent();
             $pdfContent = $this->pdfService->generatePdfFromMarkdown($mdContent);
+            $this->saveGeneration('generated.pdf');
 
             return new Response($pdfContent, 200, [
                 'Content-Type'        => 'application/pdf',
@@ -232,8 +312,13 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($redirect = $this->denyIfLimitReached('app_office_to_pdf')) {
+                return $redirect;
+            }
+
             $file       = $form->getData()['officeFile'];
             $pdfContent = $this->pdfService->generatePdfFromOffice($file->getContent(), $file->getClientOriginalName());
+            $this->saveGeneration('generated.pdf');
 
             return new Response($pdfContent, 200, [
                 'Content-Type'        => 'application/pdf',
@@ -262,7 +347,12 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($redirect = $this->denyIfLimitReached('app_screenshot_to_pdf')) {
+                return $redirect;
+            }
+
             $pdfContent = $this->pdfService->generateScreenshotFromUrl($form->getData()['url']);
+            $this->saveGeneration('screenshot.pdf');
 
             return new Response($pdfContent, 200, [
                 'Content-Type'        => 'application/pdf',
