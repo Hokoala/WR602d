@@ -21,6 +21,9 @@ class Generation
     #[ORM\Column(length: 255)]
     private ?string $file = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $toolName = null;
+
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -60,6 +63,18 @@ class Generation
     public function setFile(string $file): static
     {
         $this->file = $file;
+
+        return $this;
+    }
+
+    public function getToolName(): ?string
+    {
+        return $this->toolName;
+    }
+
+    public function setToolName(?string $toolName): static
+    {
+        $this->toolName = $toolName;
 
         return $this;
     }
