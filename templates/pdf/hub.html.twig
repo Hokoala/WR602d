@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Convertisseur PDF{% endblock %}
+
+{% block body %}
+    <div {{ react_component('ConverterHub', {
+        'firstname': app.user ? app.user.firstname : null,
+        'lastname':  app.user ? app.user.lastname  : null,
+        'email':     app.user ? app.user.email     : null,
+        'toolsData': toolsData
+    }) }}></div>
+{% endblock %}

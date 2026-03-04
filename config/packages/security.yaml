@@ -38,9 +38,15 @@ security:
         # Pages publiques (login, register, reset-password) → pas de règle restrictive
 
         # Outils de conversion → authentification obligatoire
-        - { path: ^/generate-pdf, roles: ROLE_USER }
-        - { path: ^/convert,      roles: ROLE_USER }
-        - { path: ^/html-to-pdf,  roles: ROLE_USER }
+        - { path: ^/generate-pdf,      roles: ROLE_USER }
+        - { path: ^/convert,           roles: ROLE_USER }
+        - { path: ^/html-to-pdf,       roles: ROLE_USER }
+        - { path: ^/merge-pdf,         roles: ROLE_USER }
+        - { path: ^/markdown-to-pdf,   roles: ROLE_USER }
+        - { path: ^/office-to-pdf,     roles: ROLE_USER }
+        - { path: ^/screenshot-to-pdf, roles: ROLE_USER }
+        - { path: ^/split-pdf,         roles: ROLE_USER }
+        - { path: ^/compress-pdf,      roles: ROLE_USER }
 
         # Profil → authentification obligatoire
         - { path: ^/profile,      roles: ROLE_USER }
