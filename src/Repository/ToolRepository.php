@@ -15,4 +15,14 @@ class ToolRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Tool::class);
     }
+
+    public function findByNameKeyword(string $keyword): ?Tool
+    {
+        return $this->createQueryBuilder('t')
+            ->where('LOWER(t.name) LIKE LOWER(:keyword)')
+            ->setParameter('keyword', '%' . $keyword . '%')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
