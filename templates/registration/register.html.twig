@@ -1,24 +1,155 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+<div style="min-height:100vh; display:flex; flex-direction:row; background:#f9fafb;">
 
-    <h1>Register</h1>
+    {# ── GAUCHE : photo ── #}
+    <div style="width:50%; position:relative; overflow:hidden; flex-shrink:0;
+                background-image: url('/images/bg-auth.jpg');
+                background-size: cover;
+                background-position: center;">
 
-    {{ form_errors(registrationForm) }}
+        {# Overlay dégradé sombre #}
+        <div style="position:absolute; inset:0;
+                    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.15) 100%);">
+        </div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plan) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+        {# Texte en bas #}
+        <div style="position:absolute; bottom:3rem; left:2.5rem; right:2.5rem; z-index:10;">
+            <h2 class="font-thunder" style="font-size:3.5rem; color:#fff; line-height:1; margin-bottom:0.75rem;">
+                PDF EN UN CLIC
+            </h2>
+            <p style="color:rgba(255,255,255,0.7); font-size:0.875rem; line-height:1.6; max-width:18rem; margin-bottom:1.5rem;">
+                Convertissez vos URLs et fichiers HTML en PDF professionnels en quelques secondes.
+            </p>
+            <div style="display:flex; flex-direction:column; gap:0.625rem;">
+                <div style="display:flex; align-items:center; gap:0.625rem;">
+                    <div style="width:1rem; height:1rem; border-radius:9999px; background:#FF701F; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width:0.6rem;height:0.6rem;" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span style="color:rgba(255,255,255,0.75); font-size:0.875rem;">Conversion HTML → PDF instantanée</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.625rem;">
+                    <div style="width:1rem; height:1rem; border-radius:9999px; background:#FF701F; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width:0.6rem;height:0.6rem;" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span style="color:rgba(255,255,255,0.75); font-size:0.875rem;">Historique de vos fichiers</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.625rem;">
+                    <div style="width:1rem; height:1rem; border-radius:9999px; background:#FF701F; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width:0.6rem;height:0.6rem;" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span style="color:rgba(255,255,255,0.75); font-size:0.875rem;">API disponible sur tous les plans</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+    {# ── DROITE : formulaire centré ── #}
+    <div style="width:50%; display:flex; align-items:center; justify-content:center;
+                background:#f9fafb; padding:3rem 1.5rem; flex-shrink:0;">
+
+        <div style="width:100%; max-width:26rem;">
+
+            {# Retour #}
+            <a href="/home" style="display:inline-flex; align-items:center; gap:0.5rem;
+                                   color:#9ca3af; text-decoration:none; font-size:0.875rem;
+                                   margin-bottom:2.5rem; transition:color 0.2s;">
+                <svg xmlns="http://www.w3.org/2000/svg" style="width:1rem;height:1rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                Retour à l'accueil
+            </a>
+
+            {# Titre #}
+            <h1 class="font-thunder" style="font-size:3rem; color:#111827; line-height:1; margin-bottom:0.5rem;">
+                INSCRIPTION
+            </h1>
+            <p style="color:#9ca3af; font-size:0.875rem; margin-bottom:2rem;">
+                Créez votre compte et commencez à générer des PDF.
+            </p>
+
+            {# Messages flash #}
+            {% for flash_error in app.flashes('verify_email_error') %}
+                <div style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; font-size:0.875rem; border-radius:0.75rem; padding:0.75rem 1rem; margin-bottom:1rem;">
+                    {{ flash_error }}
+                </div>
+            {% endfor %}
+
+            {% for flash_success in app.flashes('success') %}
+                <div style="background:#f0fdf4; border:1px solid #bbf7d0; color:#15803d; font-size:0.875rem; border-radius:0.75rem; padding:0.75rem 1rem; margin-bottom:1rem;">
+                    {{ flash_success }}
+                </div>
+            {% endfor %}
+
+            {% if registrationForm.vars.errors|length %}
+                <div style="background:#fef2f2; border:1px solid #fecaca; color:#dc2626; font-size:0.875rem; border-radius:0.75rem; padding:0.75rem 1rem; margin-bottom:1rem;">
+                    {{ form_errors(registrationForm) }}
+                </div>
+            {% endif %}
+
+            {# Formulaire #}
+            {{ form_start(registrationForm, {'attr': {'style': 'display:flex; flex-direction:column; gap:1.25rem;', 'novalidate': 'novalidate'}}) }}
+
+                <div>
+                    <label style="display:block; font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
+                        Adresse email
+                    </label>
+                    {{ form_widget(registrationForm.email, {'attr': {
+                        'style': 'width:100%; border:1px solid #e5e7eb; border-radius:0.75rem; padding:0.75rem 1rem; font-size:0.875rem; color:#1f2937; background:#fff; box-sizing:border-box; outline:none;',
+                        'placeholder': 'votre@email.com'
+                    }}) }}
+                    {{ form_errors(registrationForm.email) }}
+                </div>
+
+                <div>
+                    <label style="display:block; font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
+                        Plan
+                    </label>
+                    {{ form_widget(registrationForm.plan, {'attr': {
+                        'style': 'width:100%; border:1px solid #e5e7eb; border-radius:0.75rem; padding:0.75rem 1rem; font-size:0.875rem; color:#1f2937; background:#fff; box-sizing:border-box; outline:none;'
+                    }}) }}
+                    {{ form_errors(registrationForm.plan) }}
+                </div>
+
+                <div>
+                    <label style="display:block; font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
+                        Mot de passe
+                    </label>
+                    {{ form_widget(registrationForm.plainPassword, {'attr': {
+                        'style': 'width:100%; border:1px solid #e5e7eb; border-radius:0.75rem; padding:0.75rem 1rem; font-size:0.875rem; color:#1f2937; background:#fff; box-sizing:border-box; outline:none;',
+                        'placeholder': '6 caractères minimum'
+                    }}) }}
+                    {{ form_errors(registrationForm.plainPassword) }}
+                </div>
+
+                <div style="display:flex; align-items:flex-start; gap:0.75rem;">
+                    {{ form_widget(registrationForm.agreeTerms, {'attr': {
+                        'style': 'margin-top:0.125rem; width:1rem; height:1rem; accent-color:#FF701F; flex-shrink:0;'
+                    }}) }}
+                    <label style="font-size:0.875rem; color:#6b7280;">
+                        J'accepte les <a href="#" style="color:#FF701F; text-decoration:none;">conditions d'utilisation</a>
+                    </label>
+                    {{ form_errors(registrationForm.agreeTerms) }}
+                </div>
+
+                <button type="submit" class="font-thunder"
+                    style="width:100%; background:#FF701F; color:#fff; font-size:1.375rem;
+                           padding:0.875rem; border-radius:0.75rem; border:none; cursor:pointer;
+                           letter-spacing:0.05em; margin-top:0.5rem; transition:background 0.2s;">
+                    CRÉER MON COMPTE
+                </button>
+
+            {{ form_end(registrationForm) }}
+
+            <p style="text-align:center; font-size:0.875rem; color:#9ca3af; margin-top:1.5rem;">
+                Déjà un compte ?
+                <a href="/login" style="color:#FF701F; font-weight:700; text-decoration:none;">Se connecter</a>
+            </p>
+        </div>
+    </div>
+
+</div>
 {% endblock %}

@@ -1,11 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Password Reset Email Sent{% endblock %}
+{% block title %}Email envoyé{% endblock %}
 
 {% block body %}
-    <p>
-        If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
-        This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
-    </p>
-    <p>If you don't receive an email please check your spam folder or <a href="{{ path('app_forgot_password_request') }}">try again</a>.</p>
+<div class="min-h-screen bg-[#FF701F] flex items-center justify-center px-4 relative overflow-hidden">
+
+    <div class="absolute top-[-80px] right-[-80px] w-96 h-96 rounded-full bg-white/10"></div>
+    <div class="absolute bottom-[-60px] left-[-60px] w-72 h-72 rounded-full bg-white/10"></div>
+
+    <div class="relative z-10 bg-white rounded-3xl shadow-2xl px-10 py-12 max-w-md w-full text-center">
+
+        <div class="w-20 h-20 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+        </div>
+
+        <h1 class="font-thunder text-[36px] text-gray-900 leading-[1] mb-3">EMAIL ENVOYÉ !</h1>
+
+        <p class="text-gray-500 text-sm leading-relaxed mb-2">
+            Un lien de réinitialisation a été envoyé à votre adresse email.
+        </p>
+        <p class="text-gray-400 text-xs mb-8">
+            Ce lien expirera dans
+            <span class="font-semibold text-gray-600">
+                {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}
+            </span>.
+        </p>
+
+        <p class="text-gray-400 text-xs mb-6">
+            Vous n'avez pas reçu d'email ? Vérifiez vos spams ou
+            <a href="{{ path('app_forgot_password_request') }}" class="text-[#FF701F] hover:underline font-semibold">
+                réessayez
+            </a>.
+        </p>
+
+        <a href="/login" class="block w-full bg-[#FF701F] hover:bg-orange-600 text-white font-thunder text-[20px] py-3 rounded-xl transition-all">
+            RETOUR À LA CONNEXION
+        </a>
+    </div>
+</div>
 {% endblock %}
