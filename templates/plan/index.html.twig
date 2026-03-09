@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tarifs{% endblock %}
+
+{% block body %}
+    <div {{ react_component('PageTransition') }}></div>
+    <div {{ react_component('Tarifs', {
+        'firstname':     firstname,
+        'lastname':      lastname,
+        'email':         email,
+        'plans':         plans,
+        'currentPlanId': currentPlanId
+    }) }}></div>
+{% endblock %}

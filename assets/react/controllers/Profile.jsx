@@ -77,10 +77,12 @@ export default function Profile({ firstname, lastname, email, phone, dob, photo,
                         )}
 
                         <div>
-                            <h1 style={{ fontFamily: 'Thunder-Extra-Bold, sans-serif', fontSize: '2.5rem', color: '#fff', lineHeight: 1, margin: '0 0 0.3rem' }}>
+                            <h1 style={{ fontFamily: 'system-ui, sans-serif', fontSize: '1.4rem', fontWeight: 700, color: '#fff', lineHeight: 1.2, margin: '0 0 0.3rem' }}>
                                 {fullName}
                             </h1>
-                            <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.85rem', margin: 0 }}>{email}</p>
+                            <p style={{ fontFamily: 'system-ui, sans-serif', color: 'rgba(255,255,255,0.95)', fontSize: '0.82rem', fontWeight: 400, margin: 0, wordBreak: 'break-all' }}>
+                                {email}
+                            </p>
                         </div>
 
                         {/* Badge plan */}
