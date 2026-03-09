@@ -19,6 +19,18 @@ export default function Profile({ firstname, lastname, email, phone, dob, photo,
     const initial  = (firstname || email || '?')[0].toUpperCase();
     const fullName = [firstname, lastname].filter(Boolean).join(' ') || email;
 
+    const isUnlimited = generationLimit === -1 || generationLimit === null;
+    const remaining   = isUnlimited ? null : Math.max(0, generationLimit - generationUsed);
+    const percent     = isUnlimited ? 100 : Math.min(100, (generationUsed / generationLimit) * 100);
+    const barColor    = percent >= 100 ? '#ef4444' : percent >= 80 ? '#f59e0b' : '#22c55e';
+
+    const planColors = {
+        FREE:    { bg: 'rgba(255,255,255,0.15)', text: '#fff' },
+        BASIC:   { bg: 'rgba(59,130,246,0.25)',  text: '#bfdbfe' },
+        PREMIUM: { bg: 'rgba(234,179,8,0.25)',   text: '#fef08a' },
+    };
+    const planStyle = planColors[plan] ?? planColors.FREE;
+
     return (
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'row', background: '#f9fafb' }}>
 

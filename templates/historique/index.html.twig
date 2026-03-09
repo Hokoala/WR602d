@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique{% endblock %}
+
+{% block body %}
+    <div {{ react_component('PageTransition') }}></div>
+    <div {{ react_component('Historique', {
+        'firstname':       app.user ? app.user.firstname : null,
+        'lastname':        app.user ? app.user.lastname  : null,
+        'email':           app.user ? app.user.email     : null,
+        'generations':     generations,
+        'generationUsed':  generationUsed,
+        'generationLimit': generationLimit,
+        'planName':        planName
+    }) }}></div>
+{% endblock %}

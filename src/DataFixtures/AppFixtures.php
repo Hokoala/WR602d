@@ -35,6 +35,13 @@ class AppFixtures extends Fixture
                 'isActive' => true,
             ],
             [
+                'name' => 'Markdown to PDF',
+                'icon' => 'fa-solid fa-hashtag',
+                'description' => 'Convertir un fichier Markdown en PDF.',
+                'color' => '#7C3AED',
+                'isActive' => true,
+            ],
+            [
                 'name' => 'Split PDF',
                 'icon' => 'fa-solid fa-scissors',
                 'description' => 'Diviser un fichier PDF en plusieurs pages.',
@@ -76,7 +83,7 @@ class AppFixtures extends Fixture
                 'specialPriceFrom' => null,
                 'specialPriceTo' => null,
                 'active' => true,
-                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Split PDF', 'Compress PDF'],
+                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Markdown to PDF', 'Split PDF', 'Compress PDF'],
             ],
             [
                 'name' => 'BASIC',
@@ -89,7 +96,7 @@ class AppFixtures extends Fixture
                 'specialPriceFrom' => new \DateTime('2024-01-01'),
                 'specialPriceTo' => new \DateTime('2024-12-31'),
                 'active' => true,
-                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Split PDF', 'Compress PDF'],
+                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Markdown to PDF', 'Split PDF', 'Compress PDF'],
             ],
             [
                 'name' => 'PREMIUM',
@@ -102,7 +109,7 @@ class AppFixtures extends Fixture
                 'specialPriceFrom' => new \DateTime('2024-01-01'),
                 'specialPriceTo' => new \DateTime('2024-12-31'),
                 'active' => true,
-                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Split PDF', 'Compress PDF'],
+                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Markdown to PDF', 'Split PDF', 'Compress PDF'],
             ],
         ];
 

@@ -17,6 +17,16 @@ class GenerationRepository extends ServiceEntityRepository
         parent::__construct($registry, Generation::class);
     }
 
+    public function findByUser(User $user): array
+    {
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('g.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function countByUser(User $user): int
     {
         return (int) $this->createQueryBuilder('g')

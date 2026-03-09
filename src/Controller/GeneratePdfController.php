@@ -62,13 +62,14 @@ class GeneratePdfController extends AbstractController
         return $this->redirectToRoute($route);
     }
 
-    private function saveGeneration(string $filename): void
+    private function saveGeneration(string $filename, string $toolName): void
     {
         /** @var User $user */
         $user = $this->getUser();
         $generation = new Generation();
         $generation->setUser($user);
         $generation->setFile($filename);
+        $generation->setToolName($toolName);
         $generation->setCreateadAt(new \DateTimeImmutable());
         $this->em->persist($generation);
         $this->em->flush();
@@ -139,7 +140,7 @@ class GeneratePdfController extends AbstractController
             }
 
             $pdfContent = $this->pdfService->generatePdfFromUrl($form->getData()['url']);
-            $this->saveGeneration('generated.pdf');
+            $this->saveGeneration('generated.pdf', 'URL to PDF');
 
             return new Response($pdfContent, 200, [
                 'Content-Type'        => 'application/pdf',
@@ -180,7 +181,7 @@ class GeneratePdfController extends AbstractController
 
             $htmlContent = $form->getData()['htmlFile']->getContent();
             $pdfContent  = $this->pdfService->generatePdfFromHtml($htmlContent);
-            $this->saveGeneration('generated.pdf');
+            $this->saveGeneration('generated.pdf', 'HTML to PDF');
 
             return new Response($pdfContent, 200, [
                 'Content-Type'        => 'application/pdf',
@@ -226,7 +227,7 @@ class GeneratePdfController extends AbstractController
             $contents  = array_map(fn($f) => $f->getContent(), $files);
             $filenames = array_map(fn($f) => $f->getClientOriginalName(), $files);
             $pdfContent = $this->pdfService->generatePdfFromMerge($contents, $filenames);
-            $this->saveGeneration('merged.pdf');
+            $this->saveGeneration('merged.pdf', 'Merge PDF');
 
             return new Response($pdfContent, 200, [
                 'Content-Type'        => 'application/pdf',
@@ -267,7 +268,7 @@ class GeneratePdfController extends AbstractController
 
             $mdContent  = $form->getData()['mdFile']->getContent();
             $pdfContent = $this->pdfService->generatePdfFromMarkdown($mdContent);
-            $this->saveGeneration('generated.pdf');
+            $this->saveGeneration('generated.pdf', 'Markdown to PDF');
 
             return new Response($pdfContent, 200, [
                 'Content-Type'        => 'application/pdf',
@@ -318,7 +319,7 @@ class GeneratePdfController extends AbstractController
 
             $file       = $form->getData()['officeFile'];
             $pdfContent = $this->pdfService->generatePdfFromOffice($file->getContent(), $file->getClientOriginalName());
-            $this->saveGeneration('generated.pdf');
+            $this->saveGeneration('generated.pdf', 'Office to PDF');
 
             return new Response($pdfContent, 200, [
                 'Content-Type'        => 'application/pdf',
@@ -352,7 +353,7 @@ class GeneratePdfController extends AbstractController
             }
 
             $pdfContent = $this->pdfService->generateScreenshotFromUrl($form->getData()['url']);
-            $this->saveGeneration('screenshot.pdf');
+            $this->saveGeneration('screenshot.pdf', 'Screenshot to PDF');
 
             return new Response($pdfContent, 200, [
                 'Content-Type'        => 'application/pdf',
