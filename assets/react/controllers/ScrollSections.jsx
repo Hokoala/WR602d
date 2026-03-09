@@ -212,7 +212,7 @@ export default function ScrollSections() {
                                 >
                                     <IconComponent />
                                 </div>
-                                <h3 className="font-thunder text-[24px] md:text-[30px] text-white uppercase leading-[1] mb-2">
+                                <h3 className="text-white font-bold text-sm md:text-base leading-tight mb-2">
                                     {tool.name}
                                 </h3>
                                 <p className="text-white/50 text-xs md:text-sm leading-snug">

@@ -9,7 +9,10 @@ export default function Header({ firstname, lastname, email }) {
         <header className="p-2 flex items-center justify-between relative">
             {/* Logo */}
             <div className="flex-1">
-                <h1 className="text-xl font-bold text-white">LOGO</h1>
+                <a href="/home" className="flex items-center gap-2">
+                    <img src="/images/logo.svg" alt="Docly" className="h-8" />
+                    <span className="text-white font-bold text-xl">Docly</span>
+                </a>
             </div>
 
             {/* Nav desktop */}

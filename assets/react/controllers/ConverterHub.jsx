@@ -86,7 +86,7 @@ function ToolCard({ tool, index }) {
             </div>
 
             {/* Titre */}
-            <h2 style={{ fontFamily: 'Thunder-Extra-Bold, sans-serif', fontSize: '1.5rem', color: '#111827', lineHeight: 1, margin: 0 }}>
+            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#111827', lineHeight: 1.3, margin: 0 }}>
                 {tool.name}
             </h2>
 
