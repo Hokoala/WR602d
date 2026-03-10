@@ -32,14 +32,14 @@ class GeneratePdfController extends AbstractController
     private function hasReachedGenerationLimit(): bool
     {
         /** @var User $user */
-        $user = $this->getUser();
+        $user  = $this->getUser();
         $limit = $user->getPlan()?->getLimitGeneration();
 
         if ($limit === null || $limit === -1) {
             return false;
         }
 
-        return $this->generationRepository->countByUser($user) >= $limit;
+        return $this->generationRepository->countByUserThisMonth($user) >= $limit;
     }
 
     private function denyIfLimitReached(string $route): ?Response
@@ -49,14 +49,14 @@ class GeneratePdfController extends AbstractController
         }
 
         /** @var User $user */
-        $user = $this->getUser();
-        $limit = $user->getPlan()?->getLimitGeneration();
+        $user     = $this->getUser();
+        $limit    = $user->getPlan()?->getLimitGeneration();
         $planName = $user->getPlan()?->getName() ?? 'FREE';
 
         $this->addFlash(
             'warning',
-            "Vous avez atteint la limite de {$limit} générations de votre plan {$planName}. "
-            . "Passez à un abonnement supérieur pour continuer à générer des PDF."
+            "Vous avez atteint la limite de {$limit} générations ce mois-ci (plan {$planName}). "
+            . "Le compteur se réinitialise le 1er du mois."
         );
 
         return $this->redirectToRoute($route);
@@ -109,7 +109,7 @@ class GeneratePdfController extends AbstractController
         }
 
         $limit = $user->getPlan()?->getLimitGeneration();
-        $used  = $this->generationRepository->countByUser($user);
+        $used  = $this->generationRepository->countByUserThisMonth($user);
 
         return $this->render('pdf/hub.html.twig', [
             'toolsData'       => $toolsData,

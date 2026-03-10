@@ -37,6 +37,38 @@ class GenerationRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function countByUserThisMonth(User $user): int
+    {
+        $startOfMonth = new \DateTimeImmutable('first day of this month 00:00:00');
+        $endOfMonth   = new \DateTimeImmutable('last day of this month 23:59:59');
+
+        return (int) $this->createQueryBuilder('g')
+            ->select('COUNT(g.id)')
+            ->andWhere('g.user = :user')
+            ->andWhere('g.createdAt BETWEEN :startOfMonth AND :endOfMonth')
+            ->setParameter('user', $user)
+            ->setParameter('startOfMonth', $startOfMonth)
+            ->setParameter('endOfMonth', $endOfMonth)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countByUserToday(User $user): int
+    {
+        $startOfDay = new \DateTimeImmutable('today 00:00:00');
+        $endOfDay   = new \DateTimeImmutable('today 23:59:59');
+
+        return (int) $this->createQueryBuilder('g')
+            ->select('COUNT(g.id)')
+            ->andWhere('g.user = :user')
+            ->andWhere('g.createdAt BETWEEN :startOfDay AND :endOfDay')
+            ->setParameter('user', $user)
+            ->setParameter('startOfDay', $startOfDay)
+            ->setParameter('endOfDay', $endOfDay)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     //    /**
     //     * @return Generation[] Returns an array of Generation objects
     //     */
