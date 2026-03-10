@@ -39,7 +39,7 @@ class GeneratePdfController extends AbstractController
             return false;
         }
 
-        return $this->generationRepository->countByUserThisMonth($user) >= $limit;
+        return $this->generationRepository->countByUserToday($user) >= $limit;
     }
 
     private function denyIfLimitReached(string $route): ?Response
@@ -56,7 +56,7 @@ class GeneratePdfController extends AbstractController
         $this->addFlash(
             'warning',
             "Vous avez atteint la limite de {$limit} générations ce mois-ci (plan {$planName}). "
-            . "Le compteur se réinitialise le 1er du mois."
+            . "Le compteur se réinitialise dans 24h."
         );
 
         return $this->redirectToRoute($route);
@@ -109,7 +109,7 @@ class GeneratePdfController extends AbstractController
         }
 
         $limit = $user->getPlan()?->getLimitGeneration();
-        $used  = $this->generationRepository->countByUserThisMonth($user);
+        $used  = $this->generationRepository->countByUserToday($user);
 
         return $this->render('pdf/hub.html.twig', [
             'toolsData'       => $toolsData,
