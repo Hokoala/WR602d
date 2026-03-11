@@ -246,7 +246,7 @@ export default function ScrollSections() {
                                 ))}
                             </ul>
                         </div>
-                        <a href="/register" className="mt-8 block text-center bg-white/20 hover:bg-white/30 text-white py-3 rounded-lg transition-all">Commencer</a>
+                        <a href="/plan" className="mt-8 block text-center bg-white/20 hover:bg-white/30 text-white py-3 rounded-lg transition-all">Commencer</a>
                     </div>
 
                     <div className="flex-1 bg-white rounded-lg p-8 flex flex-col justify-between border-4 border-white transform md:scale-105">
@@ -263,7 +263,7 @@ export default function ScrollSections() {
                                 ))}
                             </ul>
                         </div>
-                        <a href="/register" className="mt-8 block text-center bg-[#FF701F] hover:bg-[#e5631a] text-white py-3 rounded-lg transition-all font-bold">Choisir Basic</a>
+                        <a href="/plan" className="mt-8 block text-center bg-[#FF701F] hover:bg-[#e5631a] text-white py-3 rounded-lg transition-all font-bold">Choisir Basic</a>
                     </div>
 
                     <div className="flex-1 bg-white/10 backdrop-blur-sm rounded-lg p-8 flex flex-col justify-between border border-white/20">
@@ -279,7 +279,7 @@ export default function ScrollSections() {
                                 ))}
                             </ul>
                         </div>
-                        <a href="/register" className="mt-8 block text-center bg-white/20 hover:bg-white/30 text-white py-3 rounded-lg transition-all">Choisir Premium</a>
+                        <a href="/plan" className="mt-8 block text-center bg-white/20 hover:bg-white/30 text-white py-3 rounded-lg transition-all">Choisir Premium</a>
                     </div>
                 </div>
             </section>
