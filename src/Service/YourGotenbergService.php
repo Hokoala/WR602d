@@ -124,4 +124,57 @@ class YourGotenbergService
 
         return $pdfResponse->getContent();
     }
+
+    public function splitPdf(string $fileContent, string $filename): string
+    {
+        $formData = new FormDataPart([
+            'files'     => new DataPart($fileContent, $filename, 'application/pdf'),
+            'splitMode' => 'intervals',
+            'splitSpan' => '1',
+        ]);
+
+        $response = $this->client->request('POST', $this->gotenbergUrl . '/forms/pdfengines/split', [
+            'headers' => $formData->getPreparedHeaders()->toArray(),
+            'body'    => $formData->bodyToIterable(),
+        ]);
+
+        return $response->getContent();
+    }
+
+    public function compressPdf(string $fileContent, string $filename): string
+    {
+        $formData = new FormDataPart([
+            'files' => new DataPart($fileContent, $filename, 'application/pdf'),
+        ]);
+
+        $response = $this->client->request('POST', $this->gotenbergUrl . '/forms/libreoffice/convert', [
+            'headers' => $formData->getPreparedHeaders()->toArray(),
+            'body'    => $formData->bodyToIterable(),
+        ]);
+
+        return $response->getContent();
+    }
+
+    public function imageToPdf(string $imageContent, string $mimeType): string
+    {
+        $b64  = base64_encode($imageContent);
+        $html = '<!DOCTYPE html><html><head><meta charset="utf-8"><style>'
+            . '*{margin:0;padding:0;box-sizing:border-box;}'
+            . 'body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#fff;}'
+            . 'img{max-width:100%;max-height:100vh;object-fit:contain;display:block;}'
+            . '</style></head><body>'
+            . '<img src="data:' . $mimeType . ';base64,' . $b64 . '"/>'
+            . '</body></html>';
+
+        $formData = new FormDataPart([
+            'files' => new DataPart($html, 'index.html', 'text/html'),
+        ]);
+
+        $response = $this->client->request('POST', $this->gotenbergUrl . '/forms/chromium/convert/html', [
+            'headers' => $formData->getPreparedHeaders()->toArray(),
+            'body'    => $formData->bodyToIterable(),
+        ]);
+
+        return $response->getContent();
+    }
 }

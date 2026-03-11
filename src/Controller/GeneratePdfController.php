@@ -92,6 +92,7 @@ class GeneratePdfController extends AbstractController
             'screenshot to pdf' => '/screenshot-to-pdf',
             'split pdf'         => '/split-pdf',
             'compress pdf'      => '/compress-pdf',
+            'image to pdf'      => '/image-to-pdf',
         ];
 
         $toolsData = [];
@@ -375,7 +376,36 @@ class GeneratePdfController extends AbstractController
             $this->denyAccessUnlessGranted(ToolAccessVoter::ACCESS, $tool);
         }
 
-        return $this->render('pdf/split_pdf.html.twig');
+        $form = $this->createFormBuilder()
+            ->add('pdfFile', FileType::class, [
+                'required'    => true,
+                'label'       => 'Fichier PDF',
+                'constraints' => [
+                    new File(['mimeTypes' => ['application/pdf'], 'mimeTypesMessage' => 'Veuillez envoyer un fichier PDF valide.']),
+                ],
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($redirect = $this->denyIfLimitReached('app_split_pdf')) {
+                return $redirect;
+            }
+
+            $file       = $form->getData()['pdfFile'];
+            $zipContent = $this->pdfService->splitPdf($file->getContent(), $file->getClientOriginalName());
+            $this->saveGeneration('split_pages.zip', 'Split PDF');
+
+            return new Response($zipContent, 200, [
+                'Content-Type'        => 'application/zip',
+                'Content-Disposition' => 'attachment; filename="split_pages.zip"',
+            ]);
+        }
+
+        return $this->render('pdf/split_pdf.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     /** Compress PDF */
@@ -387,6 +417,79 @@ class GeneratePdfController extends AbstractController
             $this->denyAccessUnlessGranted(ToolAccessVoter::ACCESS, $tool);
         }
 
-        return $this->render('pdf/compress_pdf.html.twig');
+        $form = $this->createFormBuilder()
+            ->add('pdfFile', FileType::class, [
+                'required'    => true,
+                'label'       => 'Fichier PDF',
+                'constraints' => [
+                    new File(['mimeTypes' => ['application/pdf'], 'mimeTypesMessage' => 'Veuillez envoyer un fichier PDF valide.']),
+                ],
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($redirect = $this->denyIfLimitReached('app_compress_pdf')) {
+                return $redirect;
+            }
+
+            $file       = $form->getData()['pdfFile'];
+            $pdfContent = $this->pdfService->compressPdf($file->getContent(), $file->getClientOriginalName());
+            $this->saveGeneration('compressed.pdf', 'Compress PDF');
+
+            return new Response($pdfContent, 200, [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="compressed.pdf"',
+            ]);
+        }
+
+        return $this->render('pdf/compress_pdf.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /** Image → PDF */
+    #[Route('/image-to-pdf', name: 'app_image_to_pdf', methods: ['GET', 'POST'])]
+    public function imageToPdf(Request $request): Response
+    {
+        $tool = $this->toolRepository->findByNameKeyword('image to pdf');
+        if ($tool) {
+            $this->denyAccessUnlessGranted(ToolAccessVoter::ACCESS, $tool);
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('imageFile', FileType::class, [
+                'required'    => true,
+                'label'       => 'Image',
+                'constraints' => [
+                    new File([
+                        'mimeTypes'        => ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+                        'mimeTypesMessage' => 'Veuillez envoyer une image JPG, PNG, GIF ou WebP.',
+                    ]),
+                ],
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($redirect = $this->denyIfLimitReached('app_image_to_pdf')) {
+                return $redirect;
+            }
+
+            $file       = $form->getData()['imageFile'];
+            $pdfContent = $this->pdfService->imageToPdf($file->getContent(), $file->getMimeType());
+            $this->saveGeneration('image.pdf', 'Image to PDF');
+
+            return new Response($pdfContent, 200, [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="image.pdf"',
+            ]);
+        }
+
+        return $this->render('pdf/image_to_pdf.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
