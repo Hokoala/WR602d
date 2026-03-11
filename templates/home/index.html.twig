@@ -8,6 +8,9 @@
         'lastname': app.user ? app.user.lastname : null,
         'email': app.user ? app.user.email : null
     }) }}></div>
-    <div {{ react_component('ScrollSections') }}></div>
+    <div {{ react_component('ScrollSections', {
+        'plans': plans,
+        'currentPlanId': currentPlanId
+    }) }}></div>
     <div {{ react_component('Footer') }}></div>
 {% endblock %}

@@ -83,7 +83,13 @@ const tools = [
     },
 ];
 
-export default function ScrollSections() {
+const CheckIcon = ({ color }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" style={{ width: '1rem', height: '1rem', flexShrink: 0, color }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+);
+
+export default function ScrollSections({ plans = [], currentPlanId = null }) {
     const s1 = useRef(null);
     const sTools = useRef(null);
     const s2 = useRef(null);
@@ -233,54 +239,70 @@ export default function ScrollSections() {
                     Nos offres
                 </h2>
                 <div className="flex flex-col md:flex-row gap-6 max-w-5xl w-full">
-                    <div className="flex-1 bg-white/10 backdrop-blur-sm rounded-lg p-8 flex flex-col justify-between border border-white/20">
-                        <div>
-                            <h3 className="font-thunder text-[40px] md:text-[50px] text-white uppercase">Free</h3>
-                            <p className="font-thunder text-[50px] md:text-[70px] text-white leading-[1] mt-2">0€</p>
-                            <ul className="mt-6 space-y-3 text-sm">
-                                {['5 conversions / jour', 'Fichiers jusqu\'à 5 Mo', 'Support communautaire'].map(f => (
-                                    <li key={f} className="flex items-center gap-2 text-white/80">
-                                        <svg xmlns="http://www.w3.org/2000/svg" style={{width:'1rem',height:'1rem',flexShrink:0,color:'rgba(255,255,255,0.5)'}} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
-                                        {f}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        <a href="/plan" className="mt-8 block text-center bg-white/20 hover:bg-white/30 text-white py-3 rounded-lg transition-all">Commencer</a>
-                    </div>
+                    {plans.map((plan, i) => {
+                        const isFree       = parseFloat(plan.price) === 0;
+                        const isUnlimited  = plan.limitGeneration === -1 || plan.limitGeneration === null;
+                        const hasSpecial   = plan.specialPrice !== null;
+                        const displayPrice = hasSpecial ? parseFloat(plan.specialPrice) : parseFloat(plan.price);
+                        const isPopular    = i === Math.floor(plans.length / 2);
+                        const isCurrent    = plan.id === currentPlanId;
+                        const href         = isCurrent ? '/generate-pdf' : isFree ? '/register' : `/payment/checkout/${plan.id}`;
+                        const priceLabel   = isFree ? '0€' : `${displayPrice % 1 === 0 ? displayPrice : displayPrice.toFixed(2)}€`;
+                        const limitLabel   = isUnlimited ? 'Générations illimitées' : `${plan.limitGeneration} générations / mois`;
 
-                    <div className="flex-1 bg-white rounded-lg p-8 flex flex-col justify-between border-4 border-white transform md:scale-105">
-                        <div>
-                            <span className="text-[10px] font-mono uppercase tracking-widest bg-[#FF701F] text-white px-3 py-1 rounded-full">Populaire</span>
-                            <h3 className="font-thunder text-[40px] md:text-[50px] text-[#FF701F] uppercase mt-4">Basic</h3>
-                            <p className="font-thunder text-[50px] md:text-[70px] text-[#FF701F] leading-[1] mt-2">9€<span className="text-[20px] text-black/40">/mois</span></p>
-                            <ul className="mt-6 space-y-3 text-sm">
-                                {['50 conversions / jour', 'Fichiers jusqu\'à 50 Mo', 'Support prioritaire', 'Conversion par lot'].map(f => (
-                                    <li key={f} className="flex items-center gap-2 text-black/70">
-                                        <svg xmlns="http://www.w3.org/2000/svg" style={{width:'1rem',height:'1rem',flexShrink:0,color:'#FF701F'}} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
-                                        {f}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        <a href="/plan" className="mt-8 block text-center bg-[#FF701F] hover:bg-[#e5631a] text-white py-3 rounded-lg transition-all font-bold">Choisir Basic</a>
-                    </div>
+                        if (isPopular) return (
+                            <div key={plan.id} className="flex-1 bg-white rounded-lg p-8 flex flex-col justify-between border-4 border-white md:scale-105" style={{ position: 'relative', minWidth: '220px' }}>
+                                {isCurrent && (
+                                    <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FF701F] text-white text-[10px] font-mono uppercase tracking-widest px-3 py-1 rounded-full whitespace-nowrap">Votre plan actuel</span>
+                                )}
+                                <div>
+                                    <span className="text-[10px] font-mono uppercase tracking-widest bg-[#FF701F] text-white px-3 py-1 rounded-full">Populaire</span>
+                                    <h3 className="font-thunder text-[40px] md:text-[50px] text-[#FF701F] uppercase mt-4">{plan.name}</h3>
+                                    <p className="font-thunder text-[50px] md:text-[70px] text-[#FF701F] leading-[1] mt-2">
+                                        {priceLabel}
+                                        {!isFree && <span className="text-[20px] text-black/40">/mois</span>}
+                                        {hasSpecial && <span className="text-[18px] text-black/30 line-through ml-3">{parseFloat(plan.price)}€</span>}
+                                    </p>
+                                    <p className="text-black/50 text-sm mt-3 leading-snug">{plan.description}</p>
+                                    <ul className="mt-6 space-y-3 text-sm">
+                                        <li className="flex items-center gap-2 text-black/70"><CheckIcon color="#FF701F" />{limitLabel}</li>
+                                        {(plan.tools || []).map(t => (
+                                            <li key={t} className="flex items-center gap-2 text-black/70"><CheckIcon color="#FF701F" />{t}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <a href={href} className="mt-8 block text-center bg-[#FF701F] hover:bg-[#e5631a] text-white py-3 rounded-lg transition-all font-bold">
+                                    {isCurrent ? 'Utiliser mes outils →' : isFree ? 'Commencer' : `Choisir ${plan.name}`}
+                                </a>
+                            </div>
+                        );
 
-                    <div className="flex-1 bg-white/10 backdrop-blur-sm rounded-lg p-8 flex flex-col justify-between border border-white/20">
-                        <div>
-                            <h3 className="font-thunder text-[40px] md:text-[50px] text-white uppercase">Premium</h3>
-                            <p className="font-thunder text-[50px] md:text-[70px] text-white leading-[1] mt-2">29€<span className="text-[20px] text-white/40">/mois</span></p>
-                            <ul className="mt-6 space-y-3 text-sm">
-                                {['Conversions illimitées', 'Fichiers jusqu\'à 200 Mo', 'Support dédié 24/7', 'API access'].map(f => (
-                                    <li key={f} className="flex items-center gap-2 text-white/80">
-                                        <svg xmlns="http://www.w3.org/2000/svg" style={{width:'1rem',height:'1rem',flexShrink:0,color:'rgba(255,255,255,0.6)'}} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
-                                        {f}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        <a href="/plan" className="mt-8 block text-center bg-white/20 hover:bg-white/30 text-white py-3 rounded-lg transition-all">Choisir Premium</a>
-                    </div>
+                        return (
+                            <div key={plan.id} className="flex-1 bg-white/10 backdrop-blur-sm rounded-lg p-8 flex flex-col justify-between border border-white/20" style={{ position: 'relative', minWidth: '220px' }}>
+                                {isCurrent && (
+                                    <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-white text-[#CF909D] text-[10px] font-mono uppercase tracking-widest px-3 py-1 rounded-full whitespace-nowrap">Votre plan actuel</span>
+                                )}
+                                <div>
+                                    <h3 className="font-thunder text-[40px] md:text-[50px] text-white uppercase">{plan.name}</h3>
+                                    <p className="font-thunder text-[50px] md:text-[70px] text-white leading-[1] mt-2">
+                                        {priceLabel}
+                                        {!isFree && <span className="text-[20px] text-white/40">/mois</span>}
+                                        {hasSpecial && <span className="text-[18px] text-white/30 line-through ml-3">{parseFloat(plan.price)}€</span>}
+                                    </p>
+                                    <p className="text-white/60 text-sm mt-3 leading-snug">{plan.description}</p>
+                                    <ul className="mt-6 space-y-3 text-sm">
+                                        <li className="flex items-center gap-2 text-white/80"><CheckIcon color="rgba(255,255,255,0.5)" />{limitLabel}</li>
+                                        {(plan.tools || []).map(t => (
+                                            <li key={t} className="flex items-center gap-2 text-white/80"><CheckIcon color="rgba(255,255,255,0.5)" />{t}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <a href={href} className="mt-8 block text-center bg-white/20 hover:bg-white/30 text-white py-3 rounded-lg transition-all">
+                                    {isCurrent ? 'Utiliser mes outils →' : isFree ? 'Commencer' : `Choisir ${plan.name}`}
+                                </a>
+                            </div>
+                        );
+                    })}
                 </div>
             </section>
 
