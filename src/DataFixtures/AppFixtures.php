@@ -46,14 +46,35 @@ class AppFixtures extends Fixture
                 'icon' => 'fa-solid fa-scissors',
                 'description' => 'Diviser un fichier PDF en plusieurs pages.',
                 'color' => '#8B5CF6',
-                'isActive' => false,
+                'isActive' => true,
             ],
             [
                 'name' => 'Compress PDF',
                 'icon' => 'fa-solid fa-compress',
                 'description' => 'Compresser un fichier PDF pour réduire sa taille.',
                 'color' => '#F59E0B',
-                'isActive' => false,
+                'isActive' => true,
+            ],
+            [
+                'name' => 'Office to PDF',
+                'icon' => 'fa-solid fa-file-word',
+                'description' => 'Convertir un fichier Word, Excel ou PowerPoint en PDF.',
+                'color' => '#F97316',
+                'isActive' => true,
+            ],
+            [
+                'name' => 'Screenshot to PDF',
+                'icon' => 'fa-solid fa-camera',
+                'description' => 'Capturer une page web en PDF haute qualité.',
+                'color' => '#EC4899',
+                'isActive' => true,
+            ],
+            [
+                'name' => 'Image to PDF',
+                'icon' => 'fa-solid fa-image',
+                'description' => 'Convertir une image JPG ou PNG en fichier PDF.',
+                'color' => '#06B6D4',
+                'isActive' => true,
             ],
         ];
 
@@ -74,8 +95,8 @@ class AppFixtures extends Fixture
         $plans = [
             [
                 'name' => 'FREE',
-                'description' => 'Plan gratuit pour découvrir le service. Accès à tous les outils, limité à 5 générations.',
-                'limitGeneration' => 5,
+                'description' => 'Plan gratuit pour découvrir le service. Accès aux 4 premiers outils, limité à 4 générations par mois.',
+                'limitGeneration' => 4,
                 'image' => 'free.png',
                 'role' => 'ROLE_FREE',
                 'price' => '0.00',
@@ -83,12 +104,12 @@ class AppFixtures extends Fixture
                 'specialPriceFrom' => null,
                 'specialPriceTo' => null,
                 'active' => true,
-                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Markdown to PDF', 'Split PDF', 'Compress PDF'],
+                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Markdown to PDF'],
             ],
             [
                 'name' => 'BASIC',
-                'description' => 'Plan standard avec plus de générations et fonctionnalités avancées.',
-                'limitGeneration' => 100,
+                'description' => 'Plan standard avec accès à 8 outils et 50 générations par mois.',
+                'limitGeneration' => 50,
                 'image' => 'basic.png',
                 'role' => 'ROLE_BASIC',
                 'price' => '9.99',
@@ -96,11 +117,11 @@ class AppFixtures extends Fixture
                 'specialPriceFrom' => new \DateTime('2024-01-01'),
                 'specialPriceTo' => new \DateTime('2024-12-31'),
                 'active' => true,
-                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Markdown to PDF', 'Split PDF', 'Compress PDF'],
+                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Markdown to PDF', 'Split PDF', 'Compress PDF', 'Office to PDF', 'Screenshot to PDF'],
             ],
             [
                 'name' => 'PREMIUM',
-                'description' => 'Plan premium avec générations illimitées et accès prioritaire au support.',
+                'description' => 'Plan premium avec générations illimitées et accès à tous les outils.',
                 'limitGeneration' => -1,
                 'image' => 'premium.png',
                 'role' => 'ROLE_PREMIUM',
@@ -109,7 +130,7 @@ class AppFixtures extends Fixture
                 'specialPriceFrom' => new \DateTime('2024-01-01'),
                 'specialPriceTo' => new \DateTime('2024-12-31'),
                 'active' => true,
-                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Markdown to PDF', 'Split PDF', 'Compress PDF'],
+                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Markdown to PDF', 'Split PDF', 'Compress PDF', 'Office to PDF', 'Screenshot to PDF', 'Image to PDF'],
             ],
         ];
 
