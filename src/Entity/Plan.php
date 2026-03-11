@@ -43,6 +43,9 @@ class Plan
     #[ORM\Column(nullable: true)]
     private ?\DateTime $specialPriceTo = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $stripePriceId = null;
+
     #[ORM\Column]
     private ?bool $active = null;
 
@@ -181,6 +184,18 @@ class Plan
     public function setSpecialPriceTo(?\DateTime $specialPriceTo): static
     {
         $this->specialPriceTo = $specialPriceTo;
+
+        return $this;
+    }
+
+    public function getStripePriceId(): ?string
+    {
+        return $this->stripePriceId;
+    }
+
+    public function setStripePriceId(?string $stripePriceId): static
+    {
+        $this->stripePriceId = $stripePriceId;
 
         return $this;
     }

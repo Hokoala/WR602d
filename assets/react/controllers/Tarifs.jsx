@@ -78,7 +78,7 @@ function PricingCard({ plan, isPopular, isCurrent, index }) {
                     </ul>
                 </div>
                 <a
-                    href={isCurrent ? '/generate-pdf' : '/register'}
+                    href={isCurrent ? '/generate-pdf' : isFree ? '/register' : `/payment/checkout/${plan.id}`}
                     className="mt-8 block text-center bg-[#FF701F] hover:bg-[#e5631a] text-white py-3 rounded-lg transition-all font-bold"
                 >
                     {isCurrent ? 'Utiliser mes outils →' : `Choisir ${plan.name}`}
@@ -128,7 +128,7 @@ function PricingCard({ plan, isPopular, isCurrent, index }) {
                 </ul>
             </div>
             <a
-                href={isCurrent ? '/generate-pdf' : '/register'}
+                href={isCurrent ? '/generate-pdf' : isFree ? '/register' : `/payment/checkout/${plan.id}`}
                 className="mt-8 block text-center bg-white/20 hover:bg-white/30 text-white py-3 rounded-lg transition-all"
             >
                 {isCurrent ? 'Utiliser mes outils →' : isFree ? 'Commencer' : `Choisir ${plan.name}`}
