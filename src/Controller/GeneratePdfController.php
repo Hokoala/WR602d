@@ -93,6 +93,7 @@ class GeneratePdfController extends AbstractController
             'split pdf'         => '/convert/split',
             'compress pdf'      => '/convert/compress',
             'image to pdf'      => '/convert/image',
+            'wysiwyg to pdf'    => '/convert/wysiwyg',
         ];
 
         $toolsData = [];
@@ -491,5 +492,50 @@ class GeneratePdfController extends AbstractController
         return $this->render('pdf/image_to_pdf.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /** WYSIWYG → PDF */
+    #[Route('/convert/wysiwyg', name: 'app_convert_wysiwyg', methods: ['GET', 'POST'])]
+    public function wysiwygToPdf(Request $request): Response
+    {
+        $tool = $this->toolRepository->findByNameKeyword('wysiwyg');
+        if ($tool) {
+            $this->denyAccessUnlessGranted(ToolAccessVoter::ACCESS, $tool);
+        }
+
+        if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid('wysiwyg-pdf', $request->request->get('_token'))) {
+                throw $this->createAccessDeniedException('CSRF token invalide.');
+            }
+
+            if ($redirect = $this->denyIfLimitReached('app_convert_wysiwyg')) {
+                return $redirect;
+            }
+
+            $htmlContent = $request->request->get('wysiwyg_content', '');
+            if (empty(strip_tags($htmlContent))) {
+                $this->addFlash('error', 'Le contenu ne peut pas être vide.');
+                return $this->redirectToRoute('app_convert_wysiwyg');
+            }
+
+            $fullHtml = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>'
+                . 'body{font-family:Arial,sans-serif;padding:2cm;line-height:1.6;color:#111;}'
+                . 'h1,h2,h3{margin:1rem 0 0.5rem;}'
+                . 'img{max-width:100%;}'
+                . 'ul,ol{padding-left:1.5rem;}'
+                . 'blockquote{border-left:4px solid #e5e7eb;padding-left:1rem;color:#6b7280;}'
+                . 'pre{background:#f3f4f6;padding:1rem;border-radius:0.5rem;overflow:auto;}'
+                . '</style></head><body>' . $htmlContent . '</body></html>';
+
+            $pdfContent = $this->pdfService->generatePdfFromHtml($fullHtml);
+            $this->saveGeneration('wysiwyg.pdf', 'WYSIWYG to PDF');
+
+            return new Response($pdfContent, 200, [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="wysiwyg.pdf"',
+            ]);
+        }
+
+        return $this->render('pdf/wysiwyg.html.twig');
     }
 }
