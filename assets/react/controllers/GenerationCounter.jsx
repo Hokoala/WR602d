@@ -54,7 +54,7 @@ export default function GenerationCounter({ used, limit, planName }) {
                     <span style={{ fontSize: '0.75rem', color: '#fca5a5' }}>
                         Limite atteinte.
                     </span>
-                    <a href="/plan" style={{
+                    <a href="/pricing" style={{
                         fontSize: '0.75rem',
                         fontWeight: 700,
                         color: '#fff',

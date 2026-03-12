@@ -106,7 +106,7 @@ export default function HomePage({ firstname, lastname, email }) {
                     {/* Bouton blanc */}
                     <a
                         ref={btnRef}
-                        href="/generate-pdf"
+                        href="/convert"
                         style={{
                             position: 'relative', zIndex: 10,
                             width: btnSize, height: btnSize,

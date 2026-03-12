@@ -15,7 +15,7 @@ export default function PdfButton() {
         <div className="flex justify-center mt-10">
             <a
                 ref={btnRef}
-                href="/generate-pdf"
+                href="/convert"
                 className="w-32 h-32 md:w-48 md:h-48 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform cursor-pointer opacity-0"
             >
                 <span className="font-thunder text-[20px] md:text-[30px] text-[#FF701F] text-center leading-[1]">

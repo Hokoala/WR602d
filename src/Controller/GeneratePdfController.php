@@ -76,7 +76,7 @@ class GeneratePdfController extends AbstractController
     }
 
     /** Hub :page de sélection des outils */
-    #[Route('/generate-pdf', name: 'app_generate_pdf', methods: ['GET'])]
+    #[Route('/convert', name: 'app_convert', methods: ['GET'])]
     public function hub(): Response
     {
         /** @var User $user */
@@ -85,14 +85,14 @@ class GeneratePdfController extends AbstractController
         $allTools = $this->toolRepository->findAll();
         $routeMap = [
             'url to pdf'        => '/convert/url',
-            'html to pdf'       => '/html-to-pdf',
-            'merge pdf'         => '/merge-pdf',
-            'markdown to pdf'   => '/markdown-to-pdf',
-            'office to pdf'     => '/office-to-pdf',
-            'screenshot to pdf' => '/screenshot-to-pdf',
-            'split pdf'         => '/split-pdf',
-            'compress pdf'      => '/compress-pdf',
-            'image to pdf'      => '/image-to-pdf',
+            'html to pdf'       => '/convert/html',
+            'merge pdf'         => '/convert/merge',
+            'markdown to pdf'   => '/convert/markdown',
+            'office to pdf'     => '/convert/office',
+            'screenshot to pdf' => '/convert/screenshot',
+            'split pdf'         => '/convert/split',
+            'compress pdf'      => '/convert/compress',
+            'image to pdf'      => '/convert/image',
         ];
 
         $toolsData = [];
@@ -155,7 +155,7 @@ class GeneratePdfController extends AbstractController
     }
 
     /** HTML → PDF */
-    #[Route('/html-to-pdf', name: 'app_html_to_pdf', methods: ['GET', 'POST'])]
+    #[Route('/convert/html', name: 'app_convert_html', methods: ['GET', 'POST'])]
     public function htmlToPdf(Request $request): Response
     {
         $tool = $this->toolRepository->findByNameKeyword('html to pdf');
@@ -196,7 +196,7 @@ class GeneratePdfController extends AbstractController
     }
 
     /** Merge PDF */
-    #[Route('/merge-pdf', name: 'app_merge_pdf', methods: ['GET', 'POST'])]
+    #[Route('/convert/merge', name: 'app_convert_merge', methods: ['GET', 'POST'])]
     public function mergePdf(Request $request): Response
     {
         $tool = $this->toolRepository->findByNameKeyword('merge pdf');
@@ -242,7 +242,7 @@ class GeneratePdfController extends AbstractController
     }
 
     /** Markdown → PDF */
-    #[Route('/markdown-to-pdf', name: 'app_markdown_to_pdf', methods: ['GET', 'POST'])]
+    #[Route('/convert/markdown', name: 'app_convert_markdown', methods: ['GET', 'POST'])]
     public function markdownToPdf(Request $request): Response
     {
         $tool = $this->toolRepository->findByNameKeyword('markdown to pdf');
@@ -283,7 +283,7 @@ class GeneratePdfController extends AbstractController
     }
 
     /** Office → PDF */
-    #[Route('/office-to-pdf', name: 'app_office_to_pdf', methods: ['GET', 'POST'])]
+    #[Route('/convert/office', name: 'app_convert_office', methods: ['GET', 'POST'])]
     public function officeToPdf(Request $request): Response
     {
         $tool = $this->toolRepository->findByNameKeyword('office to pdf');
@@ -334,7 +334,7 @@ class GeneratePdfController extends AbstractController
     }
 
     /** Screenshot → PDF */
-    #[Route('/screenshot-to-pdf', name: 'app_screenshot_to_pdf', methods: ['GET', 'POST'])]
+    #[Route('/convert/screenshot', name: 'app_convert_screenshot', methods: ['GET', 'POST'])]
     public function screenshotToPdf(Request $request): Response
     {
         $tool = $this->toolRepository->findByNameKeyword('screenshot to pdf');
@@ -368,7 +368,7 @@ class GeneratePdfController extends AbstractController
     }
 
     /** Split PDF */
-    #[Route('/split-pdf', name: 'app_split_pdf', methods: ['GET', 'POST'])]
+    #[Route('/convert/split', name: 'app_split_pdf', methods: ['GET', 'POST'])]
     public function splitPdf(Request $request): Response
     {
         $tool = $this->toolRepository->findByNameKeyword('split pdf');
@@ -409,7 +409,7 @@ class GeneratePdfController extends AbstractController
     }
 
     /** Compress PDF */
-    #[Route('/compress-pdf', name: 'app_compress_pdf', methods: ['GET', 'POST'])]
+    #[Route('/convert/compress', name: 'app_compress_pdf', methods: ['GET', 'POST'])]
     public function compressPdf(Request $request): Response
     {
         $tool = $this->toolRepository->findByNameKeyword('compress pdf');
@@ -450,7 +450,7 @@ class GeneratePdfController extends AbstractController
     }
 
     /** Image → PDF */
-    #[Route('/image-to-pdf', name: 'app_image_to_pdf', methods: ['GET', 'POST'])]
+    #[Route('/convert/image', name: 'app_image_to_pdf', methods: ['GET', 'POST'])]
     public function imageToPdf(Request $request): Response
     {
         $tool = $this->toolRepository->findByNameKeyword('image to pdf');
