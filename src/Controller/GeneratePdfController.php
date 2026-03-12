@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Generation;
+use App\Entity\PdfQueue;
 use App\Entity\User;
 use App\Repository\GenerationRepository;
+use App\Repository\PdfQueueRepository;
 use App\Repository\ToolRepository;
 use App\Security\Voter\ToolAccessVoter;
 use App\Service\YourGotenbergService;
@@ -29,6 +31,7 @@ class GeneratePdfController extends AbstractController
         private GenerationRepository $generationRepository,
         private EntityManagerInterface $em,
         private MailerInterface $mailer,
+        private PdfQueueRepository $pdfQueueRepository,
     ) {
     }
 
@@ -260,26 +263,46 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($redirect = $this->denyIfLimitReached('app_merge_pdf')) {
+            if ($redirect = $this->denyIfLimitReached('app_convert_merge')) {
                 return $redirect;
             }
 
-            $files     = $form->getData()['pdfFiles'];
-            $contents  = array_map(fn($f) => $f->getContent(), $files);
-            $filenames = array_map(fn($f) => $f->getClientOriginalName(), $files);
-            $pdfContent = $this->pdfService->generatePdfFromMerge($contents, $filenames);
-            $storedFile = $this->storePdf($pdfContent, 'merged.pdf');
-            $this->saveGeneration($storedFile, 'Merge PDF');
-            $this->sendPdfByEmail($pdfContent, 'merged.pdf', 'Merge PDF');
+            $files = $form->getData()['pdfFiles'];
 
-            return new Response($pdfContent, 200, [
-                'Content-Type'        => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename="merged.pdf"',
-            ]);
+            // Sauvegarder les fichiers dans var/queue/{token}/
+            $token    = uniqid('queue_', true);
+            $queueDir = $this->getParameter('kernel.project_dir') . '/var/queue/' . $token . '/';
+            mkdir($queueDir, 0755, true);
+
+            $fileNames = [];
+            foreach ($files as $i => $file) {
+                $filename    = ($i + 1) . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                file_put_contents($queueDir . $filename, $file->getContent());
+                $fileNames[] = $filename;
+            }
+
+            // Ajouter à la file d'attente
+            /** @var User $user */
+            $user  = $this->getUser();
+            $queue = new PdfQueue();
+            $queue->setUser($user);
+            $queue->setToken($token);
+            $queue->setInputFiles($fileNames);
+            $queue->setCreatedAt(new \DateTimeImmutable());
+            $this->em->persist($queue);
+            $this->em->flush();
+
+            $this->addFlash('success', 'Votre demande de fusion a été ajoutée à la file d\'attente. Le PDF sera disponible dans votre historique dans quelques minutes.');
+            return $this->redirectToRoute('app_convert_merge');
         }
 
+        /** @var User $user */
+        $user        = $this->getUser();
+        $pendingCount = $this->pdfQueueRepository->countPendingByUser($user);
+
         return $this->render('pdf/merge_pdf.html.twig', [
-            'form' => $form->createView(),
+            'form'         => $form->createView(),
+            'pendingCount' => $pendingCount,
         ]);
     }
 
