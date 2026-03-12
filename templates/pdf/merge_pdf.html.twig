@@ -48,6 +48,19 @@
                         </div>
                     </div>
 
+                    {% if pendingCount > 0 %}
+                        <div style="background:#fef3c7; color:#92400e; border-radius:0.75rem; padding:0.75rem 1rem; margin-bottom:1.25rem; font-size:0.875rem; display:flex; align-items:center; gap:0.5rem;">
+                            <i class="fa-solid fa-clock"></i>
+                            Vous avez <strong>&nbsp;{{ pendingCount }} demande{{ pendingCount > 1 ? 's' : '' }}&nbsp;</strong> en attente de traitement. Le résultat apparaîtra dans votre historique automatiquement.
+                        </div>
+                    {% endif %}
+
+                    {% for msg in app.flashes('success') %}
+                        <div style="background:#d1fae5; color:#065f46; border-radius:0.75rem; padding:0.75rem 1rem; margin-bottom:1.25rem; font-size:0.875rem; display:flex; align-items:center; gap:0.5rem;">
+                            <i class="fa-solid fa-circle-check"></i> {{ msg }}
+                        </div>
+                    {% endfor %}
+
                     {{ form_start(form, {'attr': {'id': 'merge-pdf-form', 'style': 'display:flex;flex-direction:column;gap:1.25rem;', 'enctype': 'multipart/form-data'}}) }}
                         <div>
                             <span class="conv-label">Fichiers PDF</span>

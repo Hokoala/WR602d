@@ -23,6 +23,10 @@ services:
         arguments:
             $gotenbergUrl: '%env(URL_GOTENBERG)%'
 
+    App\Command\HandleQueueCommand:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
     App\Service\StripeService:
         arguments:
             $secretKey: '%env(STRIPE_SECRET_KEY)%'
