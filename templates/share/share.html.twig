@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Partager un PDF{% endblock %}
+
+{% block body %}
+<div {{ react_component('PageTransition') }}></div>
+<div style="min-height:100vh; display:flex; flex-direction:column; background:#FF701F;">
+    <div {{ react_component('Header', {
+        'firstname': app.user ? app.user.firstname : null,
+        'lastname':  app.user ? app.user.lastname  : null,
+        'email':     app.user ? app.user.email     : null
+    }) }}></div>
+    <div {{ react_component('WhiteBar') }}></div>
+
+    <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:3rem 1.5rem;">
+        <div style="width:100%; max-width:520px;">
+
+            <a href="{{ path('app_account_history') }}"
+               style="display:inline-flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;
+                      color:rgba(255,255,255,0.85); font-size:0.875rem; font-weight:600; text-decoration:none;">
+                <svg xmlns="http://www.w3.org/2000/svg" style="width:1.1rem;height:1.1rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Retour à l'historique
+            </a>
+
+            <div style="background:#fff; border-radius:1.5rem; padding:2.5rem; box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+                <div style="display:flex; align-items:center; gap:1rem; margin-bottom:2rem;">
+                    <div style="width:3rem; height:3rem; border-radius:0.875rem; background:#fff7ed; display:flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-share-nodes" style="color:#FF701F; font-size:1.25rem;"></i>
+                    </div>
+                    <div>
+                        <h1 style="font-size:1.5rem; font-weight:900; color:#111827; margin:0 0 0.2rem;">Partager ce PDF</h1>
+                        <p style="font-size:0.8rem; color:#9ca3af; margin:0;">{{ generation.toolName }} — {{ generation.createadAt ? generation.createadAt|date('d/m/Y') : '' }}</p>
+                    </div>
+                </div>
+
+                {% for msg in app.flashes('success') %}
+                    <div style="background:#d1fae5; color:#065f46; border-radius:0.75rem; padding:0.75rem 1rem; margin-bottom:1rem; font-size:0.875rem;">{{ msg }}</div>
+                {% endfor %}
+                {% for msg in app.flashes('error') %}
+                    <div style="background:#fee2e2; color:#dc2626; border-radius:0.75rem; padding:0.75rem 1rem; margin-bottom:1rem; font-size:0.875rem;">{{ msg }}</div>
+                {% endfor %}
+
+                <form method="POST" action="{{ path('app_share', {id: generation.id}) }}" style="display:flex; flex-direction:column; gap:1rem;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('share-pdf') }}">
+
+                    {% if contacts is not empty %}
+                    <div>
+                        <label style="display:block; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#6b7280; margin-bottom:0.5rem;">
+                            Choisir un contact existant
+                        </label>
+                        <select id="contact-select" style="width:100%; padding:0.7rem 1rem; border:1.5px solid #e5e7eb; border-radius:0.75rem; font-size:0.875rem; color:#374151; background:#fff; cursor:pointer;">
+                            <option value="">— Sélectionner —</option>
+                            {% for contact in contacts %}
+                                <option value="{{ contact.email }}" data-name="{{ contact.firstname }} {{ contact.lastname }}">
+                                    {{ contact.firstname }} {{ contact.lastname }} ({{ contact.email }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="text-align:center; font-size:0.75rem; color:#9ca3af;">ou</div>
+                    {% endif %}
+
+                    <div>
+                        <label style="display:block; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#6b7280; margin-bottom:0.5rem;">Nom du destinataire</label>
+                        <input type="text" name="name" id="recipient-name" placeholder="Prénom Nom"
+                            style="width:100%; padding:0.7rem 1rem; border:1.5px solid #e5e7eb; border-radius:0.75rem; font-size:0.875rem; box-sizing:border-box;">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#6b7280; margin-bottom:0.5rem;">Email du destinataire</label>
+                        <input type="email" name="email" id="recipient-email" placeholder="contact@email.com" required
+                            style="width:100%; padding:0.7rem 1rem; border:1.5px solid #e5e7eb; border-radius:0.75rem; font-size:0.875rem; box-sizing:border-box;">
+                    </div>
+
+                    <button type="submit"
+                        style="width:100%; padding:0.9rem; background:#FF701F; color:#fff; border:none; border-radius:0.875rem; font-weight:700; font-size:1rem; cursor:pointer; margin-top:0.25rem;">
+                        <i class="fa-solid fa-paper-plane" style="margin-right:0.4rem;"></i>
+                        Envoyer le PDF
+                    </button>
+                </form>
+
+                <a href="{{ path('app_contacts') }}" style="display:block; text-align:center; margin-top:1rem; font-size:0.8rem; color:#9ca3af; text-decoration:none;">
+                    Gérer mes contacts →
+                </a>
+
+            </div>
+        </div>
+    </div>
+    <div {{ react_component('Footer') }}></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const select = document.getElementById('contact-select');
+        if (!select) return;
+        select.addEventListener('change', function () {
+            const opt = this.options[this.selectedIndex];
+            document.getElementById('recipient-email').value = opt.value;
+            document.getElementById('recipient-name').value  = opt.dataset.name || '';
+        });
+    });
+</script>
+{% endblock %}

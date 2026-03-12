@@ -22,6 +22,7 @@ export default function Header({ firstname, lastname, email }) {
                     <li><a href="/convert" className="text-white hover:text-black">Convertisseur</a></li>
                     <li><a href="/pricing" className="text-white hover:text-black">Tarifs</a></li>
                     <li><a href="/history" className="text-white hover:text-black">Historique</a></li>
+                    <li><a href="/account/contacts" className="text-white hover:text-black">Carnet</a></li>
                     <li><a href="/contact" className="text-white hover:text-black">Contact</a></li>
                 </ul>
             </nav>
@@ -73,6 +74,7 @@ export default function Header({ firstname, lastname, email }) {
                         <li><a href="/convert" className="text-white hover:text-black block py-1">Convertisseur</a></li>
                         <li><a href="/pricing" className="text-white hover:text-black block py-1">Tarifs</a></li>
                         <li><a href="/history" className="text-white hover:text-black block py-1">Historique</a></li>
+                        <li><a href="/account/contacts" className="text-white hover:text-black block py-1">Carnet</a></li>
                         <li><a href="/contact" className="text-white hover:text-black block py-1">Contact</a></li>
                         <li className="border-t border-white/20 pt-2">
                             {isLoggedIn ? (
