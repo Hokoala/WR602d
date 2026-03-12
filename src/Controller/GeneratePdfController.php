@@ -32,6 +32,18 @@ class GeneratePdfController extends AbstractController
     ) {
     }
 
+    private function storePdf(string $content, string $originalFilename): string
+    {
+        $dir = $this->getParameter('kernel.project_dir') . '/var/pdfs/';
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        $ext        = pathinfo($originalFilename, PATHINFO_EXTENSION) ?: 'pdf';
+        $storedName = uniqid('pdf_', true) . '.' . $ext;
+        file_put_contents($dir . $storedName, $content);
+        return $storedName;
+    }
+
     private function sendPdfByEmail(string $fileContent, string $filename, string $toolName, string $mimeType = 'application/pdf'): void
     {
         /** @var User $user */
@@ -165,7 +177,8 @@ class GeneratePdfController extends AbstractController
             }
 
             $pdfContent = $this->pdfService->generatePdfFromUrl($form->getData()['url']);
-            $this->saveGeneration('generated.pdf', 'URL to PDF');
+            $storedFile = $this->storePdf($pdfContent, 'generated.pdf');
+            $this->saveGeneration($storedFile, 'URL to PDF');
             $this->sendPdfByEmail($pdfContent, 'generated.pdf', 'URL to PDF');
 
             return new Response($pdfContent, 200, [
@@ -207,7 +220,8 @@ class GeneratePdfController extends AbstractController
 
             $htmlContent = $form->getData()['htmlFile']->getContent();
             $pdfContent  = $this->pdfService->generatePdfFromHtml($htmlContent);
-            $this->saveGeneration('generated.pdf', 'HTML to PDF');
+            $storedFile  = $this->storePdf($pdfContent, 'generated.pdf');
+            $this->saveGeneration($storedFile, 'HTML to PDF');
             $this->sendPdfByEmail($pdfContent, 'generated.pdf', 'HTML to PDF');
 
             return new Response($pdfContent, 200, [
@@ -254,7 +268,8 @@ class GeneratePdfController extends AbstractController
             $contents  = array_map(fn($f) => $f->getContent(), $files);
             $filenames = array_map(fn($f) => $f->getClientOriginalName(), $files);
             $pdfContent = $this->pdfService->generatePdfFromMerge($contents, $filenames);
-            $this->saveGeneration('merged.pdf', 'Merge PDF');
+            $storedFile = $this->storePdf($pdfContent, 'merged.pdf');
+            $this->saveGeneration($storedFile, 'Merge PDF');
             $this->sendPdfByEmail($pdfContent, 'merged.pdf', 'Merge PDF');
 
             return new Response($pdfContent, 200, [
@@ -296,7 +311,8 @@ class GeneratePdfController extends AbstractController
 
             $mdContent  = $form->getData()['mdFile']->getContent();
             $pdfContent = $this->pdfService->generatePdfFromMarkdown($mdContent);
-            $this->saveGeneration('generated.pdf', 'Markdown to PDF');
+            $storedFile = $this->storePdf($pdfContent, 'generated.pdf');
+            $this->saveGeneration($storedFile, 'Markdown to PDF');
             $this->sendPdfByEmail($pdfContent, 'generated.pdf', 'Markdown to PDF');
 
             return new Response($pdfContent, 200, [
@@ -348,7 +364,8 @@ class GeneratePdfController extends AbstractController
 
             $file       = $form->getData()['officeFile'];
             $pdfContent = $this->pdfService->generatePdfFromOffice($file->getContent(), $file->getClientOriginalName());
-            $this->saveGeneration('generated.pdf', 'Office to PDF');
+            $storedFile = $this->storePdf($pdfContent, 'generated.pdf');
+            $this->saveGeneration($storedFile, 'Office to PDF');
             $this->sendPdfByEmail($pdfContent, 'generated.pdf', 'Office to PDF');
 
             return new Response($pdfContent, 200, [
@@ -383,7 +400,8 @@ class GeneratePdfController extends AbstractController
             }
 
             $pdfContent = $this->pdfService->generateScreenshotFromUrl($form->getData()['url']);
-            $this->saveGeneration('screenshot.pdf', 'Screenshot to PDF');
+            $storedFile = $this->storePdf($pdfContent, 'screenshot.pdf');
+            $this->saveGeneration($storedFile, 'Screenshot to PDF');
             $this->sendPdfByEmail($pdfContent, 'screenshot.pdf', 'Screenshot to PDF');
 
             return new Response($pdfContent, 200, [
@@ -425,7 +443,8 @@ class GeneratePdfController extends AbstractController
 
             $file       = $form->getData()['pdfFile'];
             $zipContent = $this->pdfService->splitPdf($file->getContent(), $file->getClientOriginalName());
-            $this->saveGeneration('split_pages.zip', 'Split PDF');
+            $storedFile = $this->storePdf($zipContent, 'split_pages.zip');
+            $this->saveGeneration($storedFile, 'Split PDF');
             $this->sendPdfByEmail($zipContent, 'split_pages.zip', 'Split PDF', 'application/zip');
 
             return new Response($zipContent, 200, [
@@ -467,7 +486,8 @@ class GeneratePdfController extends AbstractController
 
             $file       = $form->getData()['pdfFile'];
             $pdfContent = $this->pdfService->compressPdf($file->getContent(), $file->getClientOriginalName());
-            $this->saveGeneration('compressed.pdf', 'Compress PDF');
+            $storedFile = $this->storePdf($pdfContent, 'compressed.pdf');
+            $this->saveGeneration($storedFile, 'Compress PDF');
             $this->sendPdfByEmail($pdfContent, 'compressed.pdf', 'Compress PDF');
 
             return new Response($pdfContent, 200, [
@@ -512,7 +532,8 @@ class GeneratePdfController extends AbstractController
 
             $file       = $form->getData()['imageFile'];
             $pdfContent = $this->pdfService->imageToPdf($file->getContent(), $file->getMimeType());
-            $this->saveGeneration('image.pdf', 'Image to PDF');
+            $storedFile = $this->storePdf($pdfContent, 'image.pdf');
+            $this->saveGeneration($storedFile, 'Image to PDF');
             $this->sendPdfByEmail($pdfContent, 'image.pdf', 'Image to PDF');
 
             return new Response($pdfContent, 200, [
@@ -560,7 +581,8 @@ class GeneratePdfController extends AbstractController
                 . '</style></head><body>' . $htmlContent . '</body></html>';
 
             $pdfContent = $this->pdfService->generatePdfFromHtml($fullHtml);
-            $this->saveGeneration('wysiwyg.pdf', 'WYSIWYG to PDF');
+            $storedFile = $this->storePdf($pdfContent, 'wysiwyg.pdf');
+            $this->saveGeneration($storedFile, 'WYSIWYG to PDF');
             $this->sendPdfByEmail($pdfContent, 'wysiwyg.pdf', 'WYSIWYG to PDF');
 
             return new Response($pdfContent, 200, [

@@ -95,14 +95,30 @@ function HistoryRow({ gen, index }) {
                 </p>
             </div>
 
-            {/* Icône téléchargement */}
-            <div style={{
-                width: '2rem', height: '2rem', flexShrink: 0,
-                borderRadius: '0.5rem',
-                background: '#f3f4f6',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-                <i className="fa-solid fa-file-arrow-down" style={{ color: '#9ca3af', fontSize: '0.85rem' }} />
+            {/* Boutons actions */}
+            <div style={{ display: 'flex', gap: '0.4rem', flexShrink: 0 }}>
+                <a href={`/account/history/${gen.id}/download`}
+                   title="Télécharger"
+                   style={{
+                       width: '2rem', height: '2rem',
+                       borderRadius: '0.5rem',
+                       background: '#f3f4f6',
+                       display: 'flex', alignItems: 'center', justifyContent: 'center',
+                       textDecoration: 'none',
+                   }}>
+                    <i className="fa-solid fa-file-arrow-down" style={{ color: '#9ca3af', fontSize: '0.85rem' }} />
+                </a>
+                <a href={`/account/share/${gen.id}`}
+                   title="Partager"
+                   style={{
+                       width: '2rem', height: '2rem',
+                       borderRadius: '0.5rem',
+                       background: '#fff7ed',
+                       display: 'flex', alignItems: 'center', justifyContent: 'center',
+                       textDecoration: 'none',
+                   }}>
+                    <i className="fa-solid fa-share-nodes" style={{ color: '#FF701F', fontSize: '0.85rem' }} />
+                </a>
             </div>
         </div>
     );
@@ -177,6 +193,20 @@ export default function Historique({ firstname, lastname, email, generations, ge
                                 </p>
                             </>
                         )}
+                    </div>
+
+                    {/* Bouton contacts */}
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.75rem' }}>
+                        <a href="/account/contacts" style={{
+                            display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                            background: 'rgba(255,255,255,0.15)', color: '#fff',
+                            fontWeight: 600, fontSize: '0.8rem',
+                            padding: '0.5rem 1rem', borderRadius: '0.75rem',
+                            textDecoration: 'none', backdropFilter: 'blur(8px)',
+                        }}>
+                            <i className="fa-solid fa-address-book" />
+                            Mes contacts
+                        </a>
                     </div>
 
                     {/* Liste */}
