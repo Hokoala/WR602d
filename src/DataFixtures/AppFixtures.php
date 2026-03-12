@@ -76,6 +76,13 @@ class AppFixtures extends Fixture
                 'color' => '#06B6D4',
                 'isActive' => true,
             ],
+            [
+                'name' => 'WYSIWYG to PDF',
+                'icon' => 'fa-solid fa-pen-fancy',
+                'description' => 'Éditeur de texte riche avec mise en forme, converti en PDF.',
+                'color' => '#6366F1',
+                'isActive' => true,
+            ],
         ];
 
         $toolEntities = [];
@@ -117,7 +124,7 @@ class AppFixtures extends Fixture
                 'specialPriceFrom' => new \DateTime('2024-01-01'),
                 'specialPriceTo' => new \DateTime('2024-12-31'),
                 'active' => true,
-                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Markdown to PDF', 'Split PDF', 'Compress PDF', 'Office to PDF', 'Screenshot to PDF'],
+                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Markdown to PDF', 'Split PDF', 'Compress PDF', 'Office to PDF', 'Screenshot to PDF', 'WYSIWYG to PDF'],
             ],
             [
                 'name' => 'PREMIUM',
@@ -130,7 +137,7 @@ class AppFixtures extends Fixture
                 'specialPriceFrom' => new \DateTime('2024-01-01'),
                 'specialPriceTo' => new \DateTime('2024-12-31'),
                 'active' => true,
-                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Markdown to PDF', 'Split PDF', 'Compress PDF', 'Office to PDF', 'Screenshot to PDF', 'Image to PDF'],
+                'tools' => ['URL to PDF', 'HTML to PDF', 'Merge PDF', 'Markdown to PDF', 'Split PDF', 'Compress PDF', 'Office to PDF', 'Screenshot to PDF', 'Image to PDF', 'WYSIWYG to PDF'],
             ],
         ];
 
