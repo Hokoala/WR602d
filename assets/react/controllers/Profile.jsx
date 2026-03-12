@@ -132,7 +132,7 @@ export default function Profile({ firstname, lastname, email, phone, dob, photo,
                             </div>
                             <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', margin: 0 }}>
                                 {remaining === 0
-                                    ? <span style={{ color: '#fca5a5' }}>Limite atteinte — <a href="/plan" style={{ color: '#fff', fontWeight: 700 }}>Passer à un plan supérieur →</a></span>
+                                    ? <span style={{ color: '#fca5a5' }}>Limite atteinte — <a href="/pricing" style={{ color: '#fff', fontWeight: 700 }}>Passer à un plan supérieur →</a></span>
                                     : `Il vous reste ${remaining} génération${remaining > 1 ? 's' : ''}`
                                 }
                             </p>
@@ -196,7 +196,7 @@ export default function Profile({ firstname, lastname, email, phone, dob, photo,
                             <p style={{ fontSize: '0.7rem', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.2rem' }}>Plan actuel</p>
                             <p style={{ fontWeight: 700, color: '#111827', fontSize: '1.1rem', margin: 0 }}>{plan ?? 'FREE'}</p>
                         </div>
-                        <a href="/plan" style={{
+                        <a href="/pricing" style={{
                             display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
                             background: '#FF701F', color: '#fff',
                             fontSize: '0.8rem', fontWeight: 700,
@@ -209,7 +209,7 @@ export default function Profile({ firstname, lastname, email, phone, dob, photo,
 
                     {/* Actions */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                        <a href="/generate-pdf" style={{
+                        <a href="/convert" style={{
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
                             background: '#111827', color: '#fff',
                             fontSize: '0.875rem', fontWeight: 700,

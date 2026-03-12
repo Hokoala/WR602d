@@ -82,7 +82,7 @@
             <div class="anim-card" style="width:100%; max-width:560px;">
 
                 {# Bouton retour #}
-                <a href="{{ path('app_generate_pdf') }}"
+                <a href="{{ path('app_convert') }}"
                    style="display:inline-flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;
                           color:rgba(255,255,255,0.85); font-size:0.875rem; font-weight:600;
                           text-decoration:none; transition:color 0.2s;"
@@ -111,7 +111,7 @@
                     </div>
 
                     {# Form #}
-                    {{ form_start(form, {'action': path('app_html_to_pdf'), 'method': 'POST', 'attr': {'style': 'display:flex;flex-direction:column;gap:1.25rem;', 'enctype': 'multipart/form-data', 'id': 'html-pdf-form'}}) }}
+                    {{ form_start(form, {'action': path('app_convert_html'), 'method': 'POST', 'attr': {'style': 'display:flex;flex-direction:column;gap:1.25rem;', 'enctype': 'multipart/form-data', 'id': 'html-pdf-form'}}) }}
 
                         <div>
                             <span class="conv-label">Fichier HTML</span>

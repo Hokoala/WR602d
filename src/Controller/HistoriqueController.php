@@ -12,7 +12,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class HistoriqueController extends AbstractController
 {
-    #[Route('/historique', name: 'app_historique')]
+    #[Route('/history', name: 'app_history')]
+    #[Route('/account/history', name: 'app_account_history')]
     public function index(GenerationRepository $generationRepository): Response
     {
         /** @var User $user */

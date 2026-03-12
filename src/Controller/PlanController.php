@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class PlanController extends AbstractController
 {
-    #[Route('/plan', name: 'app_plan')]
+    #[Route('/pricing', name: 'app_pricing')]
     public function index(PlanRepository $planRepository): Response
     {
         $now   = new \DateTime();

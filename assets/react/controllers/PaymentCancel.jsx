@@ -48,7 +48,7 @@ export default function PaymentCancel({ firstname, lastname, email }) {
                         Aucun montant n'a été débité.
                     </p>
 
-                    <a href="/plan" style={{
+                    <a href="/pricing" style={{
                         display: 'block',
                         background: '#FF701F',
                         color: '#fff',

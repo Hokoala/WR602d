@@ -171,7 +171,7 @@ export default function Historique({ firstname, lastname, email, generations, ge
                                 </div>
                                 <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', margin: 0 }}>
                                     {remaining === 0
-                                        ? <span style={{ color: '#fca5a5' }}>Limite atteinte — <a href="/plan" style={{ color: '#fff', fontWeight: 700 }}>Passer à un plan supérieur →</a></span>
+                                        ? <span style={{ color: '#fca5a5' }}>Limite atteinte — <a href="/pricing" style={{ color: '#fff', fontWeight: 700 }}>Passer à un plan supérieur →</a></span>
                                         : `Il vous reste ${remaining} génération${remaining > 1 ? 's' : ''}`
                                     }
                                 </p>
@@ -187,7 +187,7 @@ export default function Historique({ firstname, lastname, email, generations, ge
                                 <p style={{ color: 'rgba(255,255,255,0.6)', margin: '0 0 1.25rem', fontSize: '0.9rem' }}>
                                     Aucune génération pour l'instant.
                                 </p>
-                                <a href="/generate-pdf" style={{
+                                <a href="/convert" style={{
                                     display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
                                     background: '#fff', color: '#FF701F',
                                     fontWeight: 700, fontSize: '0.85rem',

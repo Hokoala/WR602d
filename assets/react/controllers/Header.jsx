@@ -19,9 +19,9 @@ export default function Header({ firstname, lastname, email }) {
             <nav className="hidden md:flex flex-1 justify-center">
                 <ul className="flex gap-6">
                     <li><a href="/home" className="text-white hover:text-black">Accueil</a></li>
-                    <li><a href="/generate-pdf" className="text-white hover:text-black">Convertisseur</a></li>
-                    <li><a href="/plan" className="text-white hover:text-black">Tarifs</a></li>
-                    <li><a href="/historique" className="text-white hover:text-black">Historique</a></li>
+                    <li><a href="/convert" className="text-white hover:text-black">Convertisseur</a></li>
+                    <li><a href="/pricing" className="text-white hover:text-black">Tarifs</a></li>
+                    <li><a href="/history" className="text-white hover:text-black">Historique</a></li>
                     <li><a href="/contact" className="text-white hover:text-black">Contact</a></li>
                 </ul>
             </nav>
@@ -70,9 +70,9 @@ export default function Header({ firstname, lastname, email }) {
                 <div className="absolute top-full left-0 w-full bg-[#FF701F] z-50 shadow-lg md:hidden">
                     <ul className="flex flex-col px-4 py-3 gap-3">
                         <li><a href="/home" className="text-white hover:text-black block py-1">Accueil</a></li>
-                        <li><a href="/generate-pdf" className="text-white hover:text-black block py-1">Convertisseur</a></li>
-                        <li><a href="/plan" className="text-white hover:text-black block py-1">Tarifs</a></li>
-                        <li><a href="/historique" className="text-white hover:text-black block py-1">Historique</a></li>
+                        <li><a href="/convert" className="text-white hover:text-black block py-1">Convertisseur</a></li>
+                        <li><a href="/pricing" className="text-white hover:text-black block py-1">Tarifs</a></li>
+                        <li><a href="/history" className="text-white hover:text-black block py-1">Historique</a></li>
                         <li><a href="/contact" className="text-white hover:text-black block py-1">Contact</a></li>
                         <li className="border-t border-white/20 pt-2">
                             {isLoggedIn ? (
