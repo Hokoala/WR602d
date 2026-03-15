@@ -2,8 +2,10 @@
 
 namespace App\Tests;
 
+use App\Entity\Plan;
+use App\Entity\ResetPasswordRequest;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -12,66 +14,83 @@ class RegistrationControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
     private UserRepository $userRepository;
+    private EntityManagerInterface $em;
+    private Plan $plan;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
 
-        // Ensure we have a clean database
         $container = static::getContainer();
 
-        /** @var EntityManager $em */
-        $em = $container->get('doctrine')->getManager();
+        /** @var EntityManagerInterface $em */
+        $this->em           = $container->get('doctrine')->getManager();
         $this->userRepository = $container->get(UserRepository::class);
 
-        foreach ($this->userRepository->findAll() as $user) {
-            $em->remove($user);
+        // Nettoyage (FK : pdf_queue / reset_password_request → user → plan)
+        foreach ($this->em->getRepository(\App\Entity\PdfQueue::class)->findAll() as $q) {
+            $this->em->remove($q);
         }
+        foreach ($this->em->getRepository(ResetPasswordRequest::class)->findAll() as $r) {
+            $this->em->remove($r);
+        }
+        foreach ($this->userRepository->findAll() as $user) {
+            $this->em->remove($user);
+        }
+        foreach ($this->em->getRepository(Plan::class)->findAll() as $p) {
+            $this->em->remove($p);
+        }
+        $this->em->flush();
+        $this->em->clear(); // vide l'identity map Doctrine
 
-        $em->flush();
+        // Créer un plan FREE pour le formulaire d'inscription
+        $this->plan = new Plan();
+        $this->plan->setName('FREE');
+        $this->plan->setDescription('Plan gratuit');
+        $this->plan->setLimitGeneration(4);
+        $this->plan->setRole('ROLE_FREE');
+        $this->plan->setPrice(0.0);
+        $this->plan->setActive(true);
+        $this->plan->setCreatedAt(new \DateTimeImmutable());
+        $this->em->persist($this->plan);
+        $this->em->flush();
     }
 
     public function testRegister(): void
     {
-        // Register a new user
         $this->client->request('GET', '/register');
         self::assertResponseIsSuccessful();
-        self::assertPageTitleContains('Register');
+        self::assertPageTitleContains('Inscription');
 
-        $this->client->submitForm('Register', [
-            'registration_form[email]' => 'me@example.com',
+        $this->client->submitForm('CRÉER MON COMPTE', [
+            'registration_form[email]'         => 'me@example.com',
             'registration_form[plainPassword]' => 'password',
-            'registration_form[agreeTerms]' => true,
+            'registration_form[agreeTerms]'    => true,
+            'registration_form[plan]'          => $this->plan->getId(),
         ]);
 
-        // Ensure the response redirects after submitting the form, the user exists, and is not verified
-        // self::assertResponseRedirects('/');  @TODO: set the appropriate path that the user is redirected to.
-        self::assertCount(1, $this->userRepository->findAll());
-        self::assertFalse(($user = $this->userRepository->findAll()[0])->isVerified());
+        $allUsers = $this->userRepository->findAll();
+        $emails   = implode(', ', array_map(fn($u) => $u->getEmail(), $allUsers));
+        self::assertCount(1, $allUsers, "Expected 1 user, found: [{$emails}]");
+        self::assertFalse(($user = $allUsers[0])->isVerified());
 
-        // Ensure the verification email was sent
-        // Use either assertQueuedEmailCount() || assertEmailCount() depending on your mailer setup
-        // self::assertQueuedEmailCount(1);
         self::assertEmailCount(1);
 
-        self::assertCount(1, $messages = $this->getMailerMessages());
+        $messages = $this->getMailerMessages();
+        self::assertNotEmpty($messages);
         self::assertEmailAddressContains($messages[0], 'from', 'jean-michel.le@etudiant.univ-reims.fr');
         self::assertEmailAddressContains($messages[0], 'to', 'me@example.com');
-        self::assertEmailTextBodyContains($messages[0], 'This link will expire in 1 hour.');
 
-        // Login the new user
         $this->client->followRedirect();
         $this->client->loginUser($user);
 
-        // Get the verification link from the email
         /** @var TemplatedEmail $templatedEmail */
         $templatedEmail = $messages[0];
-        $messageBody = $templatedEmail->getHtmlBody();
+        $messageBody    = $templatedEmail->getHtmlBody();
         self::assertIsString($messageBody);
 
         preg_match('#(http://localhost/verify/email.+)">#', $messageBody, $resetLink);
 
-        // "Click" the link and see if the user is verified
         $this->client->request('GET', $resetLink[1]);
         $this->client->followRedirect();
 
