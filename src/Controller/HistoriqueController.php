@@ -20,7 +20,8 @@ class HistoriqueController extends AbstractController
         $user        = $this->getUser();
         $generations = $generationRepository->findByUser($user);
         $limit       = $user->getPlan()?->getLimitGeneration();
-        $used        = count($generations);
+        $used        = $generationRepository->countByUserToday($user);
+        $totalCount  = count($generations);
 
         $items = array_map(fn($g) => [
             'id'        => $g->getId(),
@@ -33,6 +34,7 @@ class HistoriqueController extends AbstractController
             'generations'     => $items,
             'generationUsed'  => $used,
             'generationLimit' => $limit,
+            'totalCount'      => $totalCount,
             'planName'        => $user->getPlan()?->getName() ?? 'FREE',
         ]);
     }

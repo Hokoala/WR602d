@@ -10,6 +10,7 @@
         'toolsData':       toolsData,
         'generationUsed':  generationUsed,
         'generationLimit': generationLimit,
-        'planName':        planName
+        'planName':        planName,
+        'quotaReached':    app.flashes('quota_reached')|length > 0
     }) }}></div>
 {% endblock %}

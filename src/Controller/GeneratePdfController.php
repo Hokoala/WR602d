@@ -92,9 +92,9 @@ class GeneratePdfController extends AbstractController
         $planName = $user->getPlan()?->getName() ?? 'FREE';
 
         $this->addFlash(
-            'warning',
-            "Vous avez atteint la limite de {$limit} générations ce mois-ci (plan {$planName}). "
-            . "Le compteur se réinitialise dans 24h."
+            'quota_reached',
+            "Vous avez atteint la limite de {$limit} générations aujourd'hui (plan {$planName}). "
+            . "Le quota se renouvelle chaque jour à minuit."
         );
 
         return $this->redirectToRoute($route);
