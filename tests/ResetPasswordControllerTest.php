@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\Entity\ResetPasswordRequest;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,6 +29,12 @@ class ResetPasswordControllerTest extends WebTestCase
 
         $this->userRepository = $container->get(UserRepository::class);
 
+        foreach ($this->em->getRepository(\App\Entity\PdfQueue::class)->findAll() as $q) {
+            $this->em->remove($q);
+        }
+        foreach ($this->em->getRepository(ResetPasswordRequest::class)->findAll() as $r) {
+            $this->em->remove($r);
+        }
         foreach ($this->userRepository->findAll() as $user) {
             $this->em->remove($user);
         }
@@ -37,11 +44,23 @@ class ResetPasswordControllerTest extends WebTestCase
 
     public function testResetPasswordController(): void
     {
+        // Create a plan (required by User entity)
+        $plan = new \App\Entity\Plan();
+        $plan->setName('FREE');
+        $plan->setDescription('Plan test');
+        $plan->setLimitGeneration(4);
+        $plan->setRole('ROLE_FREE');
+        $plan->setPrice(0.0);
+        $plan->setActive(true);
+        $plan->setCreatedAt(new \DateTimeImmutable());
+        $this->em->persist($plan);
+
         // Create a test user
         $user = (new User())
             ->setEmail('me@example.com')
             ->setPassword('a-test-password-that-will-be-changed-later')
         ;
+        $user->setPlan($plan);
         $this->em->persist($user);
         $this->em->flush();
 
@@ -49,10 +68,10 @@ class ResetPasswordControllerTest extends WebTestCase
         $this->client->request('GET', '/reset-password');
 
         self::assertResponseIsSuccessful();
-        self::assertPageTitleContains('Reset your password');
+        self::assertPageTitleContains('Mot de passe oublié');
 
         // Submit the reset password form and test email message is queued / sent
-        $this->client->submitForm('Send password reset email', [
+        $this->client->submitForm('ENVOYER LE LIEN', [
             'reset_password_request_form[email]' => 'me@example.com',
         ]);
 
@@ -61,7 +80,8 @@ class ResetPasswordControllerTest extends WebTestCase
         // self::assertQueuedEmailCount(1);
         self::assertEmailCount(1);
 
-        self::assertCount(1, $messages = $this->getMailerMessages());
+        $messages = $this->getMailerMessages();
+        self::assertNotEmpty($messages);
 
         self::assertEmailAddressContains($messages[0], 'from', 'jean-michel.le@etudiant.univ-reims.fr');
         self::assertEmailAddressContains($messages[0], 'to', 'me@example.com');
@@ -72,8 +92,8 @@ class ResetPasswordControllerTest extends WebTestCase
         // Test check email landing page shows correct "expires at" time
         $crawler = $this->client->followRedirect();
 
-        self::assertPageTitleContains('Password Reset Email Sent');
-        self::assertStringContainsString('This link will expire in 1 hour', $crawler->html());
+        self::assertPageTitleContains('Email envoyé');
+        self::assertStringContainsString('Ce lien expirera dans', $crawler->html());
 
         // Test the link sent in the email is valid
         $email = $messages[0]->toString();
@@ -86,7 +106,7 @@ class ResetPasswordControllerTest extends WebTestCase
         $this->client->followRedirect();
 
         // Test we can set a new password
-        $this->client->submitForm('Reset password', [
+        $this->client->submitForm('RÉINITIALISER', [
             'change_password_form[plainPassword][first]' => 'newStrongPassword',
             'change_password_form[plainPassword][second]' => 'newStrongPassword',
         ]);

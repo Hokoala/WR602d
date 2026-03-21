@@ -209,7 +209,7 @@ class GeneratePdfController extends AbstractController
                 'required'    => true,
                 'label'       => 'Fichier HTML',
                 'constraints' => [
-                    new File(['mimeTypes' => ['text/html'], 'mimeTypesMessage' => 'Veuillez envoyer un fichier HTML valide.']),
+                    new File(mimeTypes: ['text/html'], mimeTypesMessage: 'Veuillez envoyer un fichier HTML valide.'),
                 ],
             ])
             ->getForm();
@@ -254,7 +254,7 @@ class GeneratePdfController extends AbstractController
                 'multiple'    => true,
                 'constraints' => [
                     new All([
-                        new File(['mimeTypes' => ['application/pdf'], 'mimeTypesMessage' => 'Veuillez envoyer des fichiers PDF valides.']),
+                        new File(mimeTypes: ['application/pdf'], mimeTypesMessage: 'Veuillez envoyer des fichiers PDF valides.'),
                     ]),
                 ],
             ])
@@ -320,7 +320,7 @@ class GeneratePdfController extends AbstractController
                 'required'    => true,
                 'label'       => 'Fichier Markdown',
                 'constraints' => [
-                    new File(['mimeTypes' => ['text/plain', 'text/markdown'], 'mimeTypesMessage' => 'Veuillez envoyer un fichier Markdown valide.']),
+                    new File(mimeTypes: ['text/plain', 'text/markdown'], mimeTypesMessage: 'Veuillez envoyer un fichier Markdown valide.'),
                 ],
             ])
             ->getForm();
@@ -363,8 +363,8 @@ class GeneratePdfController extends AbstractController
                 'required' => true,
                 'label'    => 'Fichier Office',
                 'constraints' => [
-                    new File([
-                        'mimeTypes' => [
+                    new File(
+                        mimeTypes: [
                             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                             'application/vnd.openxmlformats-officedocument.presentationml.presentation',
@@ -372,8 +372,8 @@ class GeneratePdfController extends AbstractController
                             'application/vnd.ms-excel',
                             'application/vnd.ms-powerpoint',
                         ],
-                        'mimeTypesMessage' => 'Veuillez envoyer un fichier Word, Excel ou PowerPoint.',
-                    ]),
+                        mimeTypesMessage: 'Veuillez envoyer un fichier Word, Excel ou PowerPoint.',
+                    ),
                 ],
             ])
             ->getForm();
@@ -452,7 +452,7 @@ class GeneratePdfController extends AbstractController
                 'required'    => true,
                 'label'       => 'Fichier PDF',
                 'constraints' => [
-                    new File(['mimeTypes' => ['application/pdf'], 'mimeTypesMessage' => 'Veuillez envoyer un fichier PDF valide.']),
+                    new File(mimeTypes: ['application/pdf'], mimeTypesMessage: 'Veuillez envoyer un fichier PDF valide.'),
                 ],
             ])
             ->getForm();
@@ -495,7 +495,7 @@ class GeneratePdfController extends AbstractController
                 'required'    => true,
                 'label'       => 'Fichier PDF',
                 'constraints' => [
-                    new File(['mimeTypes' => ['application/pdf'], 'mimeTypesMessage' => 'Veuillez envoyer un fichier PDF valide.']),
+                    new File(mimeTypes: ['application/pdf'], mimeTypesMessage: 'Veuillez envoyer un fichier PDF valide.'),
                 ],
             ])
             ->getForm();
@@ -538,10 +538,10 @@ class GeneratePdfController extends AbstractController
                 'required'    => true,
                 'label'       => 'Image',
                 'constraints' => [
-                    new File([
-                        'mimeTypes'        => ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-                        'mimeTypesMessage' => 'Veuillez envoyer une image JPG, PNG, GIF ou WebP.',
-                    ]),
+                    new File(
+                        mimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+                        mimeTypesMessage: 'Veuillez envoyer une image JPG, PNG, GIF ou WebP.',
+                    ),
                 ],
             ])
             ->getForm();
