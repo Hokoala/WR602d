@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import Header from './Header';
 import WhiteBar from './WhiteBar';
@@ -124,9 +124,12 @@ function HistoryRow({ gen, index }) {
     );
 }
 
-export default function Historique({ firstname, lastname, email, generations, generationUsed, generationLimit, planName }) {
-    const titleRef   = useRef(null);
-    const counterRef = useRef(null);
+export default function Historique({ firstname, lastname, email, generations, generationUsed, generationLimit, totalCount, planName }) {
+    const titleRef    = useRef(null);
+    const counterRef  = useRef(null);
+    const isUnlimited = generationLimit === -1 || generationLimit === null;
+    const limitReached = !isUnlimited && generationUsed >= generationLimit;
+    const [showPopup, setShowPopup] = useState(limitReached);
 
     useEffect(() => {
         gsap.fromTo(titleRef.current,
@@ -139,31 +142,76 @@ export default function Historique({ firstname, lastname, email, generations, ge
         );
     }, []);
 
-    const isUnlimited = generationLimit === -1 || generationLimit === null;
-    const remaining   = isUnlimited ? null : Math.max(0, generationLimit - generationUsed);
-    const percent     = isUnlimited ? 100 : Math.min(100, (generationUsed / generationLimit) * 100);
-    const barColor    = percent >= 100 ? '#ef4444' : percent >= 80 ? '#f59e0b' : '#22c55e';
-
     return (
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#7C3AED' }}>
             <Header firstname={firstname} lastname={lastname} email={email} />
             <WhiteBar />
 
+            {/* Popup limite atteinte */}
+            {showPopup && (
+                <div style={{
+                    position: 'fixed', inset: 0, zIndex: 1000,
+                    background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    padding: '1rem',
+                }}>
+                    <div style={{
+                        background: '#fff', borderRadius: '1.25rem',
+                        padding: '2rem', maxWidth: '400px', width: '100%',
+                        boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+                        textAlign: 'center',
+                    }}>
+                        <div style={{
+                            width: '3.5rem', height: '3.5rem', borderRadius: '50%',
+                            background: '#fef2f2', display: 'flex', alignItems: 'center',
+                            justifyContent: 'center', margin: '0 auto 1rem',
+                        }}>
+                            <i className="fa-solid fa-circle-exclamation" style={{ color: '#ef4444', fontSize: '1.5rem' }} />
+                        </div>
+                        <h3 style={{ fontWeight: 700, fontSize: '1.1rem', color: '#111827', margin: '0 0 0.5rem' }}>
+                            Limite de quota atteinte
+                        </h3>
+                        <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: '0 0 1.5rem', lineHeight: 1.6 }}>
+                            Vous avez utilisé toutes vos générations aujourd'hui (<strong>{generationUsed} / {generationLimit}</strong>).
+                            Le quota se renouvelle chaque jour à minuit.
+                        </p>
+                        <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
+                            <button onClick={() => setShowPopup(false)} style={{
+                                padding: '0.6rem 1.2rem', borderRadius: '0.75rem',
+                                border: '1px solid #e5e7eb', background: '#fff',
+                                fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', color: '#374151',
+                            }}>
+                                Fermer
+                            </button>
+                            <a href="/pricing" style={{
+                                padding: '0.6rem 1.2rem', borderRadius: '0.75rem',
+                                background: '#7C3AED', color: '#fff',
+                                fontWeight: 600, fontSize: '0.85rem',
+                                textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+                            }}>
+                                <i className="fa-solid fa-arrow-up" />
+                                Upgrade
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '3rem 1.5rem' }}>
 
-                    {/* Titre centré */}
-                    <div ref={titleRef} style={{ textAlign: 'center', marginBottom: '2rem', opacity: 0, width: '100%' }}>
-                        <h1 style={{ fontFamily: 'Thunder-Extra-Bold, sans-serif', fontSize: 'clamp(40px,20vw,420px)', color: '#fff', lineHeight: 1, margin: '0 0 0.5rem' }}>
-                            HISTORIQUE
-                        </h1>
-                        <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.95rem', margin: 0 }}>
-                            Toutes vos générations de PDF
-                        </p>
-                    </div>
+                {/* Titre centré */}
+                <div ref={titleRef} style={{ textAlign: 'center', marginBottom: '2rem', opacity: 0, width: '100%' }}>
+                    <h1 style={{ fontFamily: 'Thunder-Extra-Bold, sans-serif', fontSize: 'clamp(40px,20vw,420px)', color: '#fff', lineHeight: 1, margin: '0 0 0.5rem' }}>
+                        HISTORIQUE
+                    </h1>
+                    <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.95rem', margin: 0 }}>
+                        {totalCount > 0 ? `${totalCount} fichier${totalCount > 1 ? 's' : ''} converti${totalCount > 1 ? 's' : ''} au total` : 'Toutes vos générations de PDF'}
+                    </p>
+                </div>
 
                 <div style={{ width: '100%', maxWidth: '680px' }}>
 
-                    {/* Compteur */}
+                    {/* Bloc stats total */}
                     <div ref={counterRef} style={{
                         background: 'rgba(255,255,255,0.15)',
                         backdropFilter: 'blur(8px)',
@@ -171,27 +219,29 @@ export default function Historique({ firstname, lastname, email, generations, ge
                         padding: '1rem 1.5rem',
                         marginBottom: '1.5rem',
                         opacity: 0,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
                     }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'rgba(255,255,255,0.8)' }}>
+                        <div>
+                            <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'rgba(255,255,255,0.7)', display: 'block', marginBottom: '0.2rem' }}>
                                 Plan {planName}
                             </span>
-                            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff' }}>
-                                {isUnlimited ? '∞ Illimité' : `${generationUsed} / ${generationLimit}`}
+                            <span style={{ fontSize: '1.4rem', fontWeight: 800, color: '#fff' }}>
+                                {totalCount} <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'rgba(255,255,255,0.7)' }}>
+                                    fichier{totalCount > 1 ? 's' : ''} converti{totalCount > 1 ? 's' : ''}
+                                </span>
                             </span>
                         </div>
                         {!isUnlimited && (
-                            <>
-                                <div style={{ background: 'rgba(255,255,255,0.2)', borderRadius: '999px', height: '6px', overflow: 'hidden', marginBottom: '0.4rem' }}>
-                                    <div style={{ width: `${percent}%`, height: '100%', background: barColor, borderRadius: '999px' }} />
-                                </div>
-                                <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', margin: 0 }}>
-                                    {remaining === 0
-                                        ? <span style={{ color: '#fca5a5' }}>Limite atteinte — <a href="/pricing" style={{ color: '#fff', fontWeight: 700 }}>Passer à un plan supérieur →</a></span>
-                                        : `Il vous reste ${remaining} génération${remaining > 1 ? 's' : ''}`
-                                    }
-                                </p>
-                            </>
+                            <div style={{ textAlign: 'right' }}>
+                                <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: '0.2rem' }}>
+                                    Aujourd'hui
+                                </span>
+                                <span style={{ fontSize: '1rem', fontWeight: 700, color: limitReached ? '#fca5a5' : '#fff' }}>
+                                    {generationUsed} / {generationLimit}
+                                </span>
+                            </div>
                         )}
                     </div>
 
