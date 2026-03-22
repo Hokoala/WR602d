@@ -93,6 +93,29 @@
             {# Formulaire #}
             {{ form_start(registrationForm, {'attr': {'style': 'display:flex; flex-direction:column; gap:1.25rem;', 'novalidate': 'novalidate'}}) }}
 
+                <div style="display:flex; gap:1rem;">
+                    <div style="flex:1;">
+                        <label style="display:block; font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
+                            Prénom
+                        </label>
+                        {{ form_widget(registrationForm.firstname, {'attr': {
+                            'style': 'width:100%; border:1px solid #e5e7eb; border-radius:0.75rem; padding:0.75rem 1rem; font-size:0.875rem; color:#1f2937; background:#fff; box-sizing:border-box; outline:none;',
+                            'placeholder': 'Jean'
+                        }}) }}
+                        {{ form_errors(registrationForm.firstname) }}
+                    </div>
+                    <div style="flex:1;">
+                        <label style="display:block; font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
+                            Nom
+                        </label>
+                        {{ form_widget(registrationForm.lastname, {'attr': {
+                            'style': 'width:100%; border:1px solid #e5e7eb; border-radius:0.75rem; padding:0.75rem 1rem; font-size:0.875rem; color:#1f2937; background:#fff; box-sizing:border-box; outline:none;',
+                            'placeholder': 'Dupont'
+                        }}) }}
+                        {{ form_errors(registrationForm.lastname) }}
+                    </div>
+                </div>
+
                 <div>
                     <label style="display:block; font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
                         Adresse email
@@ -104,14 +127,26 @@
                     {{ form_errors(registrationForm.email) }}
                 </div>
 
-                <div>
-                    <label style="display:block; font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
-                        Plan
-                    </label>
-                    {{ form_widget(registrationForm.plan, {'attr': {
-                        'style': 'width:100%; border:1px solid #e5e7eb; border-radius:0.75rem; padding:0.75rem 1rem; font-size:0.875rem; color:#1f2937; background:#fff; box-sizing:border-box; outline:none;'
-                    }}) }}
-                    {{ form_errors(registrationForm.plan) }}
+                <div style="display:flex; gap:1rem;">
+                    <div style="flex:1;">
+                        <label style="display:block; font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
+                            Téléphone
+                        </label>
+                        {{ form_widget(registrationForm.phone, {'attr': {
+                            'style': 'width:100%; border:1px solid #e5e7eb; border-radius:0.75rem; padding:0.75rem 1rem; font-size:0.875rem; color:#1f2937; background:#fff; box-sizing:border-box; outline:none;',
+                            'placeholder': '+33 6 00 00 00 00'
+                        }}) }}
+                        {{ form_errors(registrationForm.phone) }}
+                    </div>
+                    <div style="flex:1;">
+                        <label style="display:block; font-size:0.7rem; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem;">
+                            Date de naissance
+                        </label>
+                        {{ form_widget(registrationForm.dob, {'attr': {
+                            'style': 'width:100%; border:1px solid #e5e7eb; border-radius:0.75rem; padding:0.75rem 1rem; font-size:0.875rem; color:#1f2937; background:#fff; box-sizing:border-box; outline:none;'
+                        }}) }}
+                        {{ form_errors(registrationForm.dob) }}
+                    </div>
                 </div>
 
                 <div>
