@@ -80,7 +80,7 @@ class GeneratePdfController extends AbstractController
         return $this->generationRepository->countByUserToday($user) >= $limit;
     }
 
-    private function denyIfLimitReached(string $route): ?Response
+    private function denyIfLimitReached(): ?Response
     {
         if (!$this->hasReachedGenerationLimit()) {
             return null;
@@ -97,7 +97,7 @@ class GeneratePdfController extends AbstractController
             . "Le quota se renouvelle chaque jour à minuit."
         );
 
-        return $this->redirectToRoute($route);
+        return $this->redirectToRoute('app_convert');
     }
 
     private function saveGeneration(string $filename, string $toolName): void
@@ -175,7 +175,7 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($redirect = $this->denyIfLimitReached('app_convert_url')) {
+            if ($redirect = $this->denyIfLimitReached()) {
                 return $redirect;
             }
 
@@ -217,7 +217,7 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($redirect = $this->denyIfLimitReached('app_html_to_pdf')) {
+            if ($redirect = $this->denyIfLimitReached()) {
                 return $redirect;
             }
 
@@ -263,7 +263,7 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($redirect = $this->denyIfLimitReached('app_convert_merge')) {
+            if ($redirect = $this->denyIfLimitReached()) {
                 return $redirect;
             }
 
@@ -328,7 +328,7 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($redirect = $this->denyIfLimitReached('app_markdown_to_pdf')) {
+            if ($redirect = $this->denyIfLimitReached()) {
                 return $redirect;
             }
 
@@ -381,7 +381,7 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($redirect = $this->denyIfLimitReached('app_office_to_pdf')) {
+            if ($redirect = $this->denyIfLimitReached()) {
                 return $redirect;
             }
 
@@ -418,7 +418,7 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($redirect = $this->denyIfLimitReached('app_screenshot_to_pdf')) {
+            if ($redirect = $this->denyIfLimitReached()) {
                 return $redirect;
             }
 
@@ -460,7 +460,7 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($redirect = $this->denyIfLimitReached('app_split_pdf')) {
+            if ($redirect = $this->denyIfLimitReached()) {
                 return $redirect;
             }
 
@@ -503,7 +503,7 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($redirect = $this->denyIfLimitReached('app_compress_pdf')) {
+            if ($redirect = $this->denyIfLimitReached()) {
                 return $redirect;
             }
 
@@ -549,7 +549,7 @@ class GeneratePdfController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($redirect = $this->denyIfLimitReached('app_image_to_pdf')) {
+            if ($redirect = $this->denyIfLimitReached()) {
                 return $redirect;
             }
 
@@ -584,7 +584,7 @@ class GeneratePdfController extends AbstractController
                 throw $this->createAccessDeniedException('CSRF token invalide.');
             }
 
-            if ($redirect = $this->denyIfLimitReached('app_convert_wysiwyg')) {
+            if ($redirect = $this->denyIfLimitReached()) {
                 return $redirect;
             }
 

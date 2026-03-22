@@ -149,36 +149,36 @@ export default function ConverterHub({ firstname, lastname, email, toolsData, ge
             {/* Popup quota atteint */}
             {showPopup && (
                 <div style={{
-                    position: 'fixed', inset: 0, zIndex: 1000,
+                    position: 'fixed', inset: 0, zIndex: 9999,
                     background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     padding: '1rem',
                 }}>
                     <div style={{
-                        background: '#fff', borderRadius: '1.25rem',
+                        background: '#FF701F', borderRadius: '1.25rem',
                         padding: '2rem', maxWidth: '400px', width: '100%',
                         boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
                         textAlign: 'center',
                     }}>
                         <div style={{
                             width: '3.5rem', height: '3.5rem', borderRadius: '50%',
-                            background: '#fef2f2', display: 'flex', alignItems: 'center',
+                            background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center',
                             justifyContent: 'center', margin: '0 auto 1rem',
                         }}>
-                            <i className="fa-solid fa-circle-exclamation" style={{ color: '#ef4444', fontSize: '1.5rem' }} />
+                            <i className="fa-solid fa-circle-exclamation" style={{ color: '#fff', fontSize: '1.5rem' }} />
                         </div>
-                        <h3 style={{ fontWeight: 700, fontSize: '1.1rem', color: '#111827', margin: '0 0 0.5rem' }}>
+                        <h3 style={{ fontWeight: 700, fontSize: '1.1rem', color: '#fff', margin: '0 0 0.5rem' }}>
                             Limite de quota atteinte
                         </h3>
-                        <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: '0 0 1.5rem', lineHeight: 1.6 }}>
+                        <p style={{ fontSize: '0.875rem', color: '#d1d5db', margin: '0 0 1.5rem', lineHeight: 1.6 }}>
                             Vous avez utilisé toutes vos générations aujourd'hui (<strong>{generationUsed} / {generationLimit}</strong>).
                             Le quota se renouvelle chaque jour à minuit.
                         </p>
                         <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
                             <button onClick={() => setShowPopup(false)} style={{
                                 padding: '0.6rem 1.2rem', borderRadius: '0.75rem',
-                                border: '1px solid #e5e7eb', background: '#fff',
-                                fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', color: '#374151',
+                                border: '1px solid rgba(255,255,255,0.4)', background: 'rgba(255,255,255,0.15)',
+                                fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', color: '#fff',
                             }}>
                                 Fermer
                             </button>
