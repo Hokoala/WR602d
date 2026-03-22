@@ -26,7 +26,7 @@ class PaymentController extends AbstractController
         // Le plan FREE ne nécessite pas de paiement
         if ($plan->getStripePriceId() === null) {
             $this->addFlash('info', 'Ce plan est gratuit, aucun paiement requis.');
-            return $this->redirectToRoute('app_index');
+            return $this->redirectToRoute('app_home');
         }
 
         $successUrl = $this->generateUrl(
