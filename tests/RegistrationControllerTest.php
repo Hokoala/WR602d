@@ -66,7 +66,6 @@ class RegistrationControllerTest extends WebTestCase
             'registration_form[email]'         => 'me@example.com',
             'registration_form[plainPassword]' => 'password',
             'registration_form[agreeTerms]'    => true,
-            'registration_form[plan]'          => $this->plan->getId(),
         ]);
 
         $allUsers = $this->userRepository->findAll();
