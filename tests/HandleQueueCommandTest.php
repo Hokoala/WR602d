@@ -19,8 +19,8 @@ class HandleQueueCommandTest extends TestCase
 {
     private function makeCommand(
         array $pendingItems,
-        YourGotenbergService $pdfService = null,
-        EntityManagerInterface $em = null,
+        ?YourGotenbergService $pdfService = null,
+        ?EntityManagerInterface $em = null,
         string $projectDir = '/tmp',
     ): HandleQueueCommand {
         $repo = $this->createMock(PdfQueueRepository::class);

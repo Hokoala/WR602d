@@ -189,7 +189,7 @@ class AccessControlTest extends WebTestCase
         ]);
 
         // Doit rediriger (quota dépassé) et non générer le PDF
-        self::assertResponseRedirects('/convert/url', null, 'Le dépassement de quota doit rediriger l\'utilisateur');
+        self::assertResponseRedirects('/convert', null, 'Le dépassement de quota doit rediriger l\'utilisateur');
     }
 
     public function testGenerationIsAllowedWhenQuotaNotReached(): void
