@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}URL to PDF{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .anim-card { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s both; }
+
+        .conv-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.9rem 1.1rem;
+            border-radius: 0.875rem;
+            border: 2px solid #e5e7eb;
+            background: #f9fafb;
+            color: #111827;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .conv-input:focus {
+            border-color: #FF701F;
+            box-shadow: 0 0 0 4px rgba(255,112,31,0.12);
+            background: #fff;
+        }
+        .conv-input::placeholder { color: #9ca3af; }
+
+        .conv-label {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+        .tab-active {
+            background: #FF701F;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(255,112,31,0.35);
+        }
+        .tab-inactive {
+            background: transparent;
+            color: #6b7280;
+        }
+        .tab-inactive:hover { background: #f3f4f6; color: #374151; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div {{ react_component('PageTransition') }}></div>
+
+    <div style="min-height:100vh; display:flex; flex-direction:column; background:#FF701F;">
+        <div {{ react_component('Header', {
+            'firstname': app.user ? app.user.firstname : null,
+            'lastname':  app.user ? app.user.lastname  : null,
+            'email':     app.user ? app.user.email     : null
+        }) }}></div>
+        <div {{ react_component('WhiteBar') }}></div>
+
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:3rem 1.5rem;">
+
+            {# Card principale #}
+            <div class="anim-card" style="width:100%; max-width:560px;">
+
+                {# Bouton retour #}
+                <a href="{{ path('app_convert') }}"
+                   style="display:inline-flex; align-items:center; gap:0.5rem; margin-bottom:1.5rem;
+                          color:rgba(255,255,255,0.85); font-size:0.875rem; font-weight:600;
+                          text-decoration:none; transition:color 0.2s;"
+                   onmouseover="this.style.color='#fff'"
+                   onmouseout="this.style.color='rgba(255,255,255,0.85)'">
+                    <svg xmlns="http://www.w3.org/2000/svg" style="width:1.1rem;height:1.1rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Retour aux outils
+                </a>
+
+                {# Formulaire card #}
+                <div style="background:#fff; border-radius:1.5rem; padding:2.5rem; box-shadow:0 4px 24px rgba(0,0,0,0.08);">
+
+                    {# En-tête #}
+                    <div style="display:flex; align-items:center; gap:1rem; margin-bottom:2rem;">
+                        <div style="width:3rem; height:3rem; border-radius:0.875rem; background:#fff7ed; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="width:1.4rem;height:1.4rem;color:#FF701F;" fill="none" viewBox="0 0 24 24" stroke="#FF701F" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="font-thunder" style="font-size:1.75rem; color:#111827; line-height:1; margin-bottom:0.2rem;">URL VERS PDF</h1>
+                            <p style="font-size:0.8rem; color:#9ca3af;">Collez une URL et obtenez un PDF en quelques secondes.</p>
+                        </div>
+                    </div>
+
+                    {# Form #}
+                    {{ form_start(form, {'action': path('app_convert_url'), 'method': 'POST', 'attr': {'style': 'display:flex;flex-direction:column;gap:1.25rem;'}}) }}
+
+                        <div>
+                            <label class="conv-label">Adresse URL</label>
+                            {{ form_widget(form.url, {'attr': {'class': 'conv-input', 'placeholder': 'https://exemple.com'}}) }}
+                        </div>
+
+                        <button type="submit"
+                            style="width:100%; padding:0.9rem; background:#FF701F; color:#fff; border:none;
+                                   border-radius:0.875rem; cursor:pointer; font-weight:700; font-size:1rem;
+                                   transition:background 0.2s, transform 0.1s; letter-spacing:0.01em;"
+                            onmouseover="this.style.background='#ea6010'"
+                            onmouseout="this.style.background='#FF701F'">
+                            Générer le PDF
+                        </button>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+
+        <div {{ react_component('Footer') }}></div>
+    </div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block body %}
+    <div {{ react_component('ContactPage', {
+        'firstname': app.user ? app.user.firstname : null,
+        'lastname': app.user ? app.user.lastname : null,
+        'email': app.user ? app.user.email : null,
+        'csrfToken': csrf_token('contact')
+    }) }}></div>
+{% endblock %}

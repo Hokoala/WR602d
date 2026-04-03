@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\User;
+use App\Repository\GenerationRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
+#[IsGranted('ROLE_USER')]
+class HistoriqueController extends AbstractController
+{
+    #[Route('/history', name: 'app_history')]
+    #[Route('/account/history', name: 'app_account_history')]
+    public function index(GenerationRepository $generationRepository): Response
+    {
+        /** @var User $user */
+        $user        = $this->getUser();
+        $generations = $generationRepository->findByUser($user);
+        $limit       = $user->getPlan()?->getLimitGeneration();
+        $used        = $generationRepository->countByUserToday($user);
+        $totalCount  = count($generations);
+
+        $items = array_map(fn($g) => [
+            'id'        => $g->getId(),
+            'file'      => $g->getFile(),
+            'toolName'  => $g->getToolName(),
+            'createdAt' => $g->getCreateadAt()?->format('d/m/Y H:i'),
+        ], $generations);
+
+        return $this->render('historique/index.html.twig', [
+            'generations'     => $items,
+            'generationUsed'  => $used,
+            'generationLimit' => $limit,
+            'totalCount'      => $totalCount,
+            'planName'        => $user->getPlan()?->getName() ?? 'FREE',
+        ]);
+    }
+}

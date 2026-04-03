@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Accès refusé — Docly</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/build/app.css">
+    <style>
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #FF701F;
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+        }
+        .card {
+            background: #fff;
+            border-radius: 1.5rem;
+            padding: 3rem 2.5rem;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+            animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) both;
+            text-align: center;
+        }
+        .icon-wrap {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 50%;
+            background: #fff7ed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+        .icon-wrap i {
+            font-size: 2rem;
+            color: #FF701F;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #111827;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-size: 1rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+        .plan-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #fff7ed;
+            border: 1.5px solid #fed7aa;
+            color: #ea580c;
+            border-radius: 9999px;
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+        .btn-primary {
+            display: inline-block;
+            width: 100%;
+            padding: 0.9rem;
+            background: #FF701F;
+            color: #fff;
+            border-radius: 0.875rem;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: background 0.2s;
+            margin-bottom: 0.75rem;
+        }
+        .btn-primary:hover { background: #e05e10; }
+        .btn-secondary {
+            display: inline-block;
+            width: 100%;
+            padding: 0.9rem;
+            background: #f3f4f6;
+            color: #374151;
+            border-radius: 0.875rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .btn-secondary:hover { background: #e5e7eb; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon-wrap">
+            <i class="fa-solid fa-lock"></i>
+        </div>
+
+        <h1>403</h1>
+        <p class="subtitle">
+            Vous n'avez pas accès à cette fonctionnalité.<br>
+            Passez à un plan supérieur pour en profiter.
+        </p>
+
+        {% if app.user %}
+            <div class="plan-badge">
+                <i class="fa-solid fa-tag"></i>
+                Plan actuel&nbsp;: {{ app.user.plan ? app.user.plan.name : 'FREE' }}
+            </div>
+        {% endif %}
+
+        <a href="/pricing" class="btn-primary">
+            <i class="fa-solid fa-arrow-up" style="margin-right:0.4rem;"></i>
+            Voir les offres
+        </a>
+        <a href="/convert" class="btn-secondary">
+            Retour aux outils
+        </a>
+    </div>
+</body>
+</html>
